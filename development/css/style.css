@@ -2,3 +2,9 @@ body {
     font-family: Arial, Helvetica, sans-serif;
     margin: 0;
 }
+
+#test-cont {
+    width: 700px;
+    height: 500px;
+    border: 1px solid red;
+}
