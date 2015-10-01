@@ -6,10 +6,15 @@ var jqKeyboard = (function($) {
         SHFT_BTN_CLASS = "shift-b",
         SPEC_BTN_CLASS = "special",
         BUTTON_CLASS = "jqk-btn",
+        LANG_BTN_CLASS = "jqk-lang-btn",
+        SELECTED_LNG_CLASS = "selected",
+        HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",
+        LANG_CONT_ID = "jqk-lang-cont",
         CONT_START_POINT = 0,
         LAYOUTS_LIMIT = 3,
         visualization = {},
+        eventHandler = {},
         core = {};
 
     visualization.createBase = function() {
@@ -18,6 +23,9 @@ var jqKeyboard = (function($) {
             contDefaultY;
 
         this.$base = $("<div>").attr("id", BASE_ID);
+        this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
+        this.$base.append(this.$langCont);
+
         this.createLayout();
 
         $("body").append(this.$base);
@@ -65,12 +73,17 @@ var jqKeyboard = (function($) {
 
     visualization.createLayout = function() {
         var layoutsNum = jqKeyboard.layouts.length,
+            $generatedLayout,
             layoutObj,
             i;
 
         for (i = 0; i < layoutsNum && i < LAYOUTS_LIMIT; i += 1) {
             layoutObj = jqKeyboard.layouts[i];
-            this.createButtons(layoutObj.layout);
+
+            $generatedLayout = this.createButtons(layoutObj, i);
+            this.createLangSwitchBtn(layoutObj.lang, i);
+
+            this.$base.append($generatedLayout);
         }
 
         // TODO: Remove after testing
@@ -79,16 +92,21 @@ var jqKeyboard = (function($) {
         });
     };
 
-    visualization.createButtons = function(layout) {
-        var $row,
+    visualization.createButtons = function(layoutObj, idx) {
+        var $layoutCont = $("<div>").addClass(layoutObj.lang + "-lang"),
+            $row,
             $button,
             buttons,
             button,
             i, j;
 
-        for (i = 0; i < layout.length; i += 1) {
+        if (idx > 0) {
+            $layoutCont.addClass(HIDE_CLASS);
+        }
+
+        for (i = 0; i < layoutObj.layout.length; i += 1) {
             $row = $("<div>");
-            buttons = layout[i].split(" ");
+            buttons = layoutObj.layout[i].split(" ");
 
             for (j = 0; j < buttons.length; j += 1) {
                 $button = $("<button>").addClass(BUTTON_CLASS);
@@ -105,8 +123,24 @@ var jqKeyboard = (function($) {
                 $row.append($button);
             }
 
-            this.$base.append($row);
+            $layoutCont.append($row);
         }
+
+        return $layoutCont;
+    };
+
+    visualization.createLangSwitchBtn = function(language, idx) {
+        var $button = $("<button>")
+            .addClass(LANG_BTN_CLASS)
+            .data("lang", language)
+            .html(language.toUpperCase());
+
+        if (idx === 0) {
+            $button.addClass(SELECTED_LNG_CLASS);
+            core.selectedLanguage = language;
+        }
+
+        this.$langCont.append($button);
     };
 
     visualization.createSpecialBtn = function($button, button) {
@@ -127,6 +161,24 @@ var jqKeyboard = (function($) {
         this.createBase();
     };
 
+    eventHandler.loadLanguageSwitcher = function() {
+        $("." + LANG_BTN_CLASS).click(function() {
+            var $this = $(this),
+                newLang = $this.data("lang");
+
+            $("." + core.selectedLanguage + "-lang").addClass(HIDE_CLASS);
+            $("." + newLang + "-lang").removeClass(HIDE_CLASS);
+            $("." + LANG_BTN_CLASS + "." + SELECTED_LNG_CLASS).removeClass(SELECTED_LNG_CLASS);
+            $this.addClass(SELECTED_LNG_CLASS);
+
+            core.selectedLanguage = newLang;
+        });
+    };
+
+    eventHandler.loadEvents = function() {
+        this.loadLanguageSwitcher();
+    };
+
     core.init = function(options) {
         if (!jqKeyboard.layouts) {
             console.error("jqKeyboard: The keyboard layout configuration file hasn't been loaded.");
@@ -136,6 +188,7 @@ var jqKeyboard = (function($) {
         core.options = options;
 
         visualization.build();
+        eventHandler.loadEvents();
     };
 
     return {

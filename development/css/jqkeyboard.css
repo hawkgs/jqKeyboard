@@ -32,3 +32,11 @@
 #jq-keyboard .jqk-btn.enter {
     background: #000000;
 }
+
+.jqk-hide {
+    display: none;
+}
+
+.selected {
+    background: green;
+}
