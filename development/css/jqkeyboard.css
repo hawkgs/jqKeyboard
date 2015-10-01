@@ -27,6 +27,7 @@
 
 #jq-keyboard .jqk-btn.capslock {
     background: brown;
+    height: 10px;
 }
 
 #jq-keyboard .jqk-btn.enter {
@@ -38,5 +39,5 @@
 }
 
 .selected {
-    background: green;
+    border: 1px solid green;
 }

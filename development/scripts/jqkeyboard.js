@@ -87,9 +87,9 @@ var jqKeyboard = (function($) {
         }
 
         // TODO: Remove after testing
-        $(document).on("click", "button.jqk-btn", function () {
+        /*$(document).on("click", "button.jqk-btn", function () {
             console.log($(this).data("val"));
-        });
+        });*/
     };
 
     visualization.createButtons = function(layoutObj, idx) {
@@ -151,7 +151,7 @@ var jqKeyboard = (function($) {
         if (buttonStr === "space") {
             $button.data("val", " ").addClass("space");
         } else {
-            $button.data("oprt", buttonStr).addClass(buttonStr);
+            $button.addClass(buttonStr);
         }
 
         return $button;
@@ -175,8 +175,35 @@ var jqKeyboard = (function($) {
         });
     };
 
+    eventHandler.loadCapsLockEvent = function() {
+        $("." + SPEC_BTN_CLASS + ".capslock").click(function() {
+            if (core.capsLock) {
+                core.capsLock = false;
+                $(this).removeClass(SELECTED_LNG_CLASS);
+            }
+            else {
+                core.capsLock = true;
+                $(this).addClass(SELECTED_LNG_CLASS);
+            }
+
+            $("." + NORM_BTN_CLASS).each(function() {
+                var $this = $(this),
+                    value = $this.data("val");
+
+                if (core.capsLock) {
+                    value = value.toUpperCase();
+                } else {
+                    value = value.toLowerCase();
+                }
+
+                $this.data("val", value).html(value);
+            });
+        });
+    };
+
     eventHandler.loadEvents = function() {
         this.loadLanguageSwitcher();
+        this.loadCapsLockEvent();
     };
 
     core.init = function(options) {
