@@ -278,30 +278,64 @@ var jqKeyboard = (function($) {
             // todo
         },
 
+        loadBackspaceEvent: function() {
+            $("." + SPEC_BTN_CLASS + ".backspace").click(function() {
+                EventManager.onDirectTextManip(
+                    function(selection, activeElemNative, currentContent) {
+                        var backspaceCaretOffset;
+
+                        if (selection.start === selection.end) {
+                            backspaceCaretOffset = 1;
+                        } else {
+                            backspaceCaretOffset = 0;
+                        }
+
+                        return {
+                            updatedContent: Helpers.backspaceStrManipulation(currentContent, selection, backspaceCaretOffset),
+                            caretOffset: -backspaceCaretOffset
+                        };
+                    }
+                );
+            });
+        },
+
         loadNormButtonPressEvent: function() {
             $("#" + BASE_ID).find("." + NORM_BTN_CLASS).click(function() {
-                var activeElemNative,
-                    currentContent,
-                    updatedContent,
-                    selection;
+                var selectedBtnVal = $(this).data("val");
 
-                if (EventManager.$activeElement) {
-                    EventManager.resetActiveElementFocus();
-
-                    currentContent = EventManager.$activeElement.val() || "";
-                    activeElemNative = EventManager.$activeElement[0];
-
-                    selection = {
-                        start: activeElemNative.selectionStart,
-                        end: activeElemNative.selectionEnd
-                    };
-
-                    updatedContent = Helpers.insertCharacter(currentContent, selection, $(this).data("val"));
-
-                    EventManager.$activeElement.val(updatedContent);
-                    Helpers.setCaretPosition(activeElemNative, selection.start + 1);
-                }
+                EventManager.onDirectTextManip(
+                    function(selection, activeElemNative, currentContent) {
+                        return {
+                            updatedContent: Helpers.insertCharacter(currentContent, selection, selectedBtnVal),
+                            caretOffset: 1
+                        };
+                    }
+                );
             });
+        },
+
+        onDirectTextManip: function(btnFunctionality) {
+            var activeElemNative,
+                currentContent,
+                btnPressResult,
+                selection;
+
+            if (EventManager.$activeElement) {
+                EventManager.resetActiveElementFocus();
+
+                currentContent = EventManager.$activeElement.val() || "";
+                activeElemNative = EventManager.$activeElement[0];
+
+                selection = {
+                    start: activeElemNative.selectionStart,
+                    end: activeElemNative.selectionEnd
+                };
+
+                btnPressResult = btnFunctionality(selection, activeElemNative, currentContent);
+
+                EventManager.$activeElement.val(btnPressResult.updatedContent);
+                Helpers.setCaretPosition(activeElemNative, selection.start + btnPressResult.caretOffset);
+            }
         },
 
         // Changes the active element on each new cursor focus
@@ -327,6 +361,7 @@ var jqKeyboard = (function($) {
             this.activeElementListener();
             this.loadLanguageSwitcher();
             this.loadNormButtonPressEvent();
+            this.loadBackspaceEvent();
             this.loadCapsLockEvent();
         }
     };
