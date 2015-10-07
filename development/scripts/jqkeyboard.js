@@ -14,28 +14,52 @@ var jqKeyboard = (function($) {
         LNG_CLASS_POSTFIX = "-lang",
         CONT_START_POINT = 0,
         LAYOUTS_LIMIT = 3,
-        visualization = {},
-        eventHandler = {},
-        helpers = {},
-        core = {};
+        Visualization = {},
+        EventManager = {},
+        Helpers = {},
+        Core = {};
 
     /*
     * HELPERS MODULE
     * */
-    helpers = {
+    Helpers = {
 
         // Returns the result string after a new character is inserted/added.
-        insertCharacter: function(selection, char) {
-            return this.slice(0, selection.start) + char + this.slice(selection.end);
+        insertCharacter: function(string, selection, char) {
+            return string.slice(0, selection.start) + char + string.slice(selection.end);
         },
 
         // Returns the result string after using backspace.
-        backspaceStrManipulation: function(selection, caretOffset) {
+        backspaceStrManipulation: function(string, selection, caretOffset) {
             if (selection.start === 0 && selection.end === 0) {
-                return this;
+                return string;
             }
 
-            return this.slice(0, selection.start - caretOffset) + this.slice(selection.end);
+            return string.slice(0, selection.start - caretOffset) + string.slice(selection.end);
+        },
+
+        /*
+        * Credits goes to kd7
+        * Source: http://stackoverflow.com/questions/512528/set-cursor-position-in-html-textbox
+        * */
+        setCaretPosition: function(elem, caretPos) {
+            var range;
+
+            if (elem !== null) {
+                if (elem.createTextRange) {
+                    range = elem.createTextRange();
+
+                    range.move("character", caretPos);
+                    range.select();
+                } else {
+                    if (elem.selectionStart) {
+                        elem.focus();
+                        elem.setSelectionRange(caretPos, caretPos);
+                    } else {
+                        elem.focus();
+                    }
+                }
+            }
         }
     };
 
@@ -43,7 +67,7 @@ var jqKeyboard = (function($) {
     * VISUALIZATION MODULE
     * The module purpose is to render all the keyboard layouts - frame, buttons, etc.
     * */
-    visualization = {
+    Visualization = {
 
         // Creates the main frame/base of the keyboard and attaches the drag event to it.
         createBase: function() {
@@ -60,9 +84,9 @@ var jqKeyboard = (function($) {
 
             $("body").append(this.$base);
 
-            if (core.options && core.options.containment) {
-                containment = $(core.options.containment);
-                visualization.setBaseDefaultPos(containment.width(), containment.height());
+            if (Core.options && Core.options.containment) {
+                containment = $(Core.options.containment);
+                Visualization.setBaseDefaultPos(containment.width(), containment.height());
             } else {
                 contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
                 contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
@@ -87,11 +111,11 @@ var jqKeyboard = (function($) {
                 clearTimeout(resizeTimer);
 
                 resizeTimer = setTimeout(function() {
-                    var contDefaultX = $(window).outerWidth() - visualization.$base.outerWidth(),
-                        contDefaultY = $(window).outerHeight() - visualization.$base.outerHeight(),
+                    var contDefaultX = $(window).outerWidth() - Visualization.$base.outerWidth(),
+                        contDefaultY = $(window).outerHeight() - Visualization.$base.outerHeight(),
                         updatedContainment = [CONT_START_POINT, CONT_START_POINT, contDefaultX, contDefaultY];
 
-                    visualization.$base.draggable("option", "containment", updatedContainment);
+                    Visualization.$base.draggable("option", "containment", updatedContainment);
                 }, 100);
             });
         },
@@ -176,7 +200,7 @@ var jqKeyboard = (function($) {
 
             if (idx === 0) {
                 $button.addClass(SELECTED_LNG_CLASS);
-                core.selectedLanguage = language;
+                Core.selectedLanguage = language;
             }
 
             this.$langCont.append($button);
@@ -202,10 +226,10 @@ var jqKeyboard = (function($) {
 
 
     /*
-    * EVENTHANDLER MODULE
+    * EVENTMANAGER MODULE
     * Manages all keyboard related events - button functionality, language switching, etc.
     * */
-    eventHandler = {
+    EventManager = {
 
         // Language/layout switching functionality.
         loadLanguageSwitcher: function() {
@@ -213,24 +237,24 @@ var jqKeyboard = (function($) {
                 var $this = $(this),
                     newLang = $this.data("lang");
 
-                $("." + core.selectedLanguage + LNG_CLASS_POSTFIX).addClass(HIDE_CLASS);
+                $("." + Core.selectedLanguage + LNG_CLASS_POSTFIX).addClass(HIDE_CLASS);
                 $("." + newLang + LNG_CLASS_POSTFIX).removeClass(HIDE_CLASS);
                 $("." + LANG_BTN_CLASS + "." + SELECTED_LNG_CLASS).removeClass(SELECTED_LNG_CLASS);
                 $this.addClass(SELECTED_LNG_CLASS);
 
-                core.selectedLanguage = newLang;
+                Core.selectedLanguage = newLang;
             });
         },
 
         // CAPSLOCK functionality.
         loadCapsLockEvent: function() {
             $("." + SPEC_BTN_CLASS + ".capslock").click(function() {
-                if (core.capsLock) {
-                    core.capsLock = false;
+                if (Core.capsLock) {
+                    Core.capsLock = false;
                     $(this).removeClass(SELECTED_LNG_CLASS);
                 }
                 else {
-                    core.capsLock = true;
+                    Core.capsLock = true;
                     $(this).addClass(SELECTED_LNG_CLASS);
                 }
 
@@ -238,7 +262,7 @@ var jqKeyboard = (function($) {
                     var $this = $(this),
                         value = $this.data("val");
 
-                    if (core.capsLock) {
+                    if (Core.capsLock) {
                         value = value.toUpperCase();
                     } else {
                         value = value.toLowerCase();
@@ -254,28 +278,74 @@ var jqKeyboard = (function($) {
             // todo
         },
 
+        loadNormButtonPressEvent: function() {
+            $("#" + BASE_ID).find("." + NORM_BTN_CLASS).click(function() {
+                var activeElemNative,
+                    currentContent,
+                    updatedContent,
+                    selection;
+
+                if (EventManager.$activeElement) {
+                    EventManager.resetActiveElementFocus();
+
+                    currentContent = EventManager.$activeElement.val() || "";
+                    activeElemNative = EventManager.$activeElement[0];
+
+                    selection = {
+                        start: activeElemNative.selectionStart,
+                        end: activeElemNative.selectionEnd
+                    };
+
+                    updatedContent = Helpers.insertCharacter(currentContent, selection, $(this).data("val"));
+
+                    EventManager.$activeElement.val(updatedContent);
+                    Helpers.setCaretPosition(activeElemNative, selection.start + 1);
+                }
+            });
+        },
+
+        // Changes the active element on each new cursor focus
+        activeElementListener: function() {
+            // Those are the allowed active elements
+            $("input, textarea").focus(function() {
+                EventManager.$activeElement = $(this);
+            });
+        },
+
+        resetActiveElementFocus: function() {
+            this.$activeElement.blur(function () {
+                setTimeout(function () {
+                    EventManager.$activeElement.focus(function(event) {
+                        event.stopPropagation();
+                    });
+                }, 25);
+            });
+        },
+
         // Used for selecting which events to load at once.
         loadEvents: function() {
+            this.activeElementListener();
             this.loadLanguageSwitcher();
+            this.loadNormButtonPressEvent();
             this.loadCapsLockEvent();
         }
     };
 
 
     // CORE - Entry point
-    core.init = function(options) {
+    Core.init = function(options) {
         if (!jqKeyboard.layouts) {
             console.error("jqKeyboard: The keyboard layout configuration file hasn't been loaded.");
             return;
         }
 
-        core.options = options;
+        Core.options = options;
 
-        visualization.createBase();
-        eventHandler.loadEvents();
+        Visualization.createBase();
+        EventManager.loadEvents();
     };
 
     return {
-        init: core.init
+        init: Core.init
     };
 }(jQuery));
