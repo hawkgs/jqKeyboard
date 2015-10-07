@@ -281,7 +281,7 @@ var jqKeyboard = (function($) {
         loadBackspaceEvent: function() {
             $("." + SPEC_BTN_CLASS + ".backspace").click(function() {
                 EventManager.onDirectTextManip(
-                    function(selection, activeElemNative, currentContent) {
+                    function(selection, currentContent) {
                         var backspaceCaretOffset;
 
                         if (selection.start === selection.end) {
@@ -304,7 +304,7 @@ var jqKeyboard = (function($) {
                 var selectedBtnVal = $(this).data("val");
 
                 EventManager.onDirectTextManip(
-                    function(selection, activeElemNative, currentContent) {
+                    function(selection, currentContent) {
                         return {
                             updatedContent: Helpers.insertCharacter(currentContent, selection, selectedBtnVal),
                             caretOffset: 1
@@ -331,7 +331,7 @@ var jqKeyboard = (function($) {
                     end: activeElemNative.selectionEnd
                 };
 
-                btnPressResult = btnFunctionality(selection, activeElemNative, currentContent);
+                btnPressResult = btnFunctionality(selection, currentContent);
 
                 EventManager.$activeElement.val(btnPressResult.updatedContent);
                 Helpers.setCaretPosition(activeElemNative, selection.start + btnPressResult.caretOffset);
