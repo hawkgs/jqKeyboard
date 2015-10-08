@@ -7,7 +7,7 @@ var jqKeyboard = (function($) {
         SPEC_BTN_CLASS = "special",
         BUTTON_CLASS = "jqk-btn",
         LANG_BTN_CLASS = "jqk-lang-btn",
-        SELECTED_LNG_CLASS = "selected",
+        SELECTED_ITEM_CLASS = "selected",
         HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",
         LANG_CONT_ID = "jqk-lang-cont",
@@ -17,6 +17,7 @@ var jqKeyboard = (function($) {
         Visualization = {},
         EventManager = {},
         Helpers = {},
+        Effects = {},
         Core = {};
 
     /*
@@ -181,7 +182,8 @@ var jqKeyboard = (function($) {
             }
             else if (button.length === 3) {
                 $button.addClass(SHFT_BTN_CLASS)
-                    .data("val", { norm: button[0], shift: button[2] })
+                    .data("val", button[0])
+                    .data("shift", button[2])
                     .html(button[0]);
             }
             else if (button.indexOf("<<") !== -1 && button.indexOf(">>") !== -1) {
@@ -199,7 +201,7 @@ var jqKeyboard = (function($) {
                 .html(language.toUpperCase());
 
             if (idx === 0) {
-                $button.addClass(SELECTED_LNG_CLASS);
+                $button.addClass(SELECTED_ITEM_CLASS);
                 Core.selectedLanguage = language;
             }
 
@@ -239,8 +241,8 @@ var jqKeyboard = (function($) {
 
                 $("." + Core.selectedLanguage + LNG_CLASS_POSTFIX).addClass(HIDE_CLASS);
                 $("." + newLang + LNG_CLASS_POSTFIX).removeClass(HIDE_CLASS);
-                $("." + LANG_BTN_CLASS + "." + SELECTED_LNG_CLASS).removeClass(SELECTED_LNG_CLASS);
-                $this.addClass(SELECTED_LNG_CLASS);
+                $("." + LANG_BTN_CLASS + "." + SELECTED_ITEM_CLASS).removeClass(SELECTED_ITEM_CLASS);
+                $this.addClass(SELECTED_ITEM_CLASS);
 
                 Core.selectedLanguage = newLang;
             });
@@ -248,34 +250,65 @@ var jqKeyboard = (function($) {
 
         // CAPSLOCK functionality.
         loadCapsLockEvent: function() {
-            $("." + SPEC_BTN_CLASS + ".capslock").click(function() {
-                if (Core.capsLock) {
-                    Core.capsLock = false;
-                    $(this).removeClass(SELECTED_LNG_CLASS);
-                }
-                else {
-                    Core.capsLock = true;
-                    $(this).addClass(SELECTED_LNG_CLASS);
-                }
+            var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
-                $("." + NORM_BTN_CLASS).each(function() {
-                    var $this = $(this),
-                        value = $this.data("val");
+            Visualization.$base
+                .find(lngClass)
+                .find("." + SPEC_BTN_CLASS + ".capslock")
+                .click(function() {
+                    var $parent = $(this).closest(lngClass);
 
                     if (Core.capsLock) {
-                        value = value.toUpperCase();
-                    } else {
-                        value = value.toLowerCase();
+                        Core.capsLock = false;
+                        $(this).removeClass(SELECTED_ITEM_CLASS);
+                    }
+                    else {
+                        Core.capsLock = true;
+                        $(this).addClass(SELECTED_ITEM_CLASS);
                     }
 
-                    $this.data("val", value).html(value);
+                    $parent.find("." + NORM_BTN_CLASS).each(function() {
+                        var $this = $(this),
+                            value = $this.data("val");
+
+                        if (Core.capsLock) {
+                            value = value.toUpperCase();
+                        } else {
+                            value = value.toLowerCase();
+                        }
+
+                        $this.html(value);
+                    });
                 });
-            });
         },
 
         // SHIFT functionality.
         loadShiftEvent: function() {
-            // todo
+            var $shiftButtons = $("." + SPEC_BTN_CLASS + ".shift");
+
+            $shiftButtons.click(function() {
+                Core.shift = true;
+                $shiftButtons.addClass(SELECTED_ITEM_CLASS);
+
+                $("." + NORM_BTN_CLASS).each(function() {
+                    var $this = $(this),
+                        value = $this.data("val").toUpperCase();
+
+                    $this.html(value);
+                });
+
+                $("." + SHFT_BTN_CLASS).each(function() {
+                    var $this = $(this),
+                        value = $this.data("shift");
+
+                    $this.html(value);
+                });
+            });
+        },
+
+        shiftMeto: function() {
+            Core.shift = false;
+
         },
 
         loadBackspaceEvent: function() {
@@ -299,19 +332,26 @@ var jqKeyboard = (function($) {
             });
         },
 
-        loadNormButtonPressEvent: function() {
-            $("#" + BASE_ID).find("." + NORM_BTN_CLASS).click(function() {
-                var selectedBtnVal = $(this).data("val");
+        loadInputButtonEvent: function() {
+            Visualization.$base
+                .find("." + NORM_BTN_CLASS)
+                .add("." + SHFT_BTN_CLASS)
+                .add("." + SPEC_BTN_CLASS + ".space")
+                .click(function() {
+                    var selectedBtnVal = $(this).data("val");
 
-                EventManager.onDirectTextManip(
-                    function(selection, currentContent) {
-                        return {
-                            updatedContent: Helpers.insertCharacter(currentContent, selection, selectedBtnVal),
-                            caretOffset: 1
-                        };
+                    if (Core.capsLock || Core.shift) {
+                        selectedBtnVal = selectedBtnVal.toUpperCase();
                     }
-                );
-            });
+
+                    EventManager.onDirectTextManip(
+                        function(selection, currentContent) {
+                            return {
+                                updatedContent: Helpers.insertCharacter(currentContent, selection, selectedBtnVal),
+                                caretOffset: 1
+                            };
+                        });
+                });
         },
 
         onDirectTextManip: function(btnFunctionality) {
@@ -335,6 +375,8 @@ var jqKeyboard = (function($) {
 
                 EventManager.$activeElement.val(btnPressResult.updatedContent);
                 Helpers.setCaretPosition(activeElemNative, selection.start + btnPressResult.caretOffset);
+
+                // is shift
             }
         },
 
@@ -360,9 +402,10 @@ var jqKeyboard = (function($) {
         loadEvents: function() {
             this.activeElementListener();
             this.loadLanguageSwitcher();
-            this.loadNormButtonPressEvent();
+            this.loadInputButtonEvent();
             this.loadBackspaceEvent();
             this.loadCapsLockEvent();
+            this.loadShiftEvent();
         }
     };
 

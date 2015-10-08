@@ -6,7 +6,7 @@ jqKeyboard.layouts = [{
             "<<shift>> z x c v b n m , . / <<shift>>",
             "<<space>>"]
 }, {
-    lang: "LEL",
+    lang: "lel",
     layout: ["f n g", "y o l 0"]
 }, {
     lang: "pepe",
