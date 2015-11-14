@@ -1,0 +1,3 @@
+ - For uncompressed ```jqkeyboard.js``` click [here](https://github.com/hAWKdv/jqKeyboard/tree/master/development/built).
+ - For uncompressed (default theme) ```jqkeyboard.css``` click [here](https://github.com/hAWKdv/jqKeyboard/blob/master/development/css).
+ - For more themes click [here](https://github.com/hAWKdv/jqKeyboard/blob/master/themes).
