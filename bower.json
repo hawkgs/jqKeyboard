@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "homepage": "https://github.com/hAWKdv/jqKeyboard",
   "authors": [
-    "hAWK"
+    "hAWKdv"
   ],
-  "description": "jQuery plugin for virtual keyboard",
+  "description": "jQuery-based virtual keyboard",
   "license": "MIT",
   "ignore": [
     "**/.*",

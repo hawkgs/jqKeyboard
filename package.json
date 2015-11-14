@@ -1,0 +1,30 @@
+{
+  "name": "jqkeyboard",
+  "version": "0.1.0",
+  "description": "jQuery-based virtual keyboard",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hAWKdv/jqKeyboard.git"
+  },
+  "author": "hAWKdv",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hAWKdv/jqKeyboard/issues"
+  },
+  "homepage": "https://github.com/hAWKdv/jqKeyboard#readme",
+  "devDependencies": {
+    "gulp": "^3.9.0",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.6.0",
+    "gulp-header": "^1.7.1",
+    "gulp-json-editor": "^2.2.1",
+    "gulp-minify": "0.0.5",
+    "gulp-minify-css": "^1.2.1",
+    "gulp-replace": "^0.5.4",
+    "gulp-wrap": "^0.11.0"
+  }
+}
