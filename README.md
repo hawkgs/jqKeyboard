@@ -2,7 +2,7 @@
 
 jQuery-based virtual keyboard
 
-*V0.1.0*
+**V0.1.0**
 
 ## License
 
