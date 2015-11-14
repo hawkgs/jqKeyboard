@@ -42,7 +42,7 @@ gulp.task("_update-build-no", function () {
 // Builds the jqkeyboard.js from the separated modules
 gulp.task("default", ["_update-build-no"], function () {
     return gulp.src(moduleOrder)
-        .pipe(replace(/\n/g, "\t")) // Adds tabulation to concatenated modules
+        //.pipe(replace(/\n/g, "    ")) // Adds tabulation to concatenated modules
         .pipe(replace(/"use strict";var/g, "")) // Removes the strict mode from modules (There is global one in wrapper)
         .pipe(replace(new RegExp("//jshint ignore:line", "g"), "")) // Removes module-specific JSHint ignored lines
         .pipe(concat("jqkeyboard.js", { newLine: "\n\n" })) // Concatenates the modules in jqkeyboard.js
