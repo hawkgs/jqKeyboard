@@ -1,5 +1,8 @@
 "use strict";var//jshint ignore:line
-// CORE - Entry point
+/*
+ * CORE MODULE
+ * Entry point of the application
+ * */
 Core = { //jshint ignore:line
     init: function(options) {
         if (!jqKeyboard.layouts) {
@@ -8,6 +11,7 @@ Core = { //jshint ignore:line
         }
 
         Core.options = options;
+        Core.selectedLanguage = null;
 
         Visualization.createBase();
         EventManager.loadEvents();

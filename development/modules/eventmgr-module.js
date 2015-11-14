@@ -4,6 +4,8 @@
  * Manages all keyboard related events - button functionality, language switching, etc.
  * */
 EventManager = { //jshint ignore:line
+    // Module-specific constants
+    SHIFT_CLASS: "." + SPEC_BTN_CLASS + ".shift",
 
     // Language/layout switching functionality.
     loadLanguageSwitcher: function() {
@@ -22,52 +24,59 @@ EventManager = { //jshint ignore:line
 
     // CAPSLOCK functionality.
     loadCapsLockEvent: function() {
-        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+        var capsLockClass = "." + SPEC_BTN_CLASS + ".capslock",
+            lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
         Visualization.$base
             .find(lngClass)
-            .find("." + SPEC_BTN_CLASS + ".capslock")
+            .find(capsLockClass)
             .click(function() {
-                var $parent = $(this).closest(lngClass);
+                var $this = $(this),
+                    $parent = $this.closest(lngClass), // Modify only selected layout
 
-                if (Core.capsLock) {
-                    Core.capsLock = false;
-                    $(this).removeClass(SELECTED_ITEM_CLASS);
-                }
-                else {
-                    Core.capsLock = true;
-                    $(this).addClass(SELECTED_ITEM_CLASS);
+                    // We are checking if the button is selected (has the respective class)
+                    isCapsLockOn = $this.hasClass(SELECTED_ITEM_CLASS);
+
+                if (isCapsLockOn) {
+                    // Core.capsLock = false;
+                    $this.removeClass(SELECTED_ITEM_CLASS);
+                }  else {
+                    // Core.capsLock = true;
+                    $this.addClass(SELECTED_ITEM_CLASS);
                 }
 
+                // Set all buttons to upper or lower case
                 $parent.find("." + NORM_BTN_CLASS).each(function() {
                     var $this = $(this),
                         value = $this.data("val");
 
-                    if (Core.capsLock) {
+                    if (isCapsLockOn) {
                         value = value.toUpperCase();
                     } else {
                         value = value.toLowerCase();
                     }
 
-                    $this.html(value);
+                    $this.html(value).data("val", value);
                 });
             });
     },
 
     // SHIFT functionality.
     loadShiftEvent: function() {
-        var shiftClass = "." + SPEC_BTN_CLASS + ".shift",
-            lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
         Visualization.$base
             .find(lngClass)
-            .find(shiftClass)
+            .find(EventManager.SHIFT_CLASS)
             .click(function() {
-                var $parent = $(this).closest(shiftClass);
+                var $parent = $(this).closest(lngClass);
+
+                console.log("HERE");
 
                 Core.shift = true;
-                $(shiftClass).addClass(SELECTED_ITEM_CLASS);
+                $(EventManager.SHIFT_CLASS).addClass(SELECTED_ITEM_CLASS);
 
+                // Set all buttons to upper case
                 $parent.find("." + NORM_BTN_CLASS).each(function() {
                     var $this = $(this),
                         value = $this.data("val").toUpperCase();
@@ -75,6 +84,8 @@ EventManager = { //jshint ignore:line
                     $this.html(value).data("val", value);
                 });
 
+                // Trigger shift button class
+                // TODO
                 $parent.find("." + SHFT_BTN_CLASS).each(function() {
                     var $this = $(this),
                         value = $this.data("shift");
@@ -85,8 +96,7 @@ EventManager = { //jshint ignore:line
     },
 
     unshift: function() {
-        var shiftClass = "." + SPEC_BTN_CLASS + ".shift",
-            $shiftButtons = $(shiftClass);
+        var $shiftButtons = $(EventManager.SHIFT_CLASS);
 
         Core.shift = false;
         $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
