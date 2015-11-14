@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 17
+ * @build 21
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -195,8 +195,9 @@ Visualization = {
         }
         else if (button.length === 3) {
             $button.addClass(SHFT_BTN_CLASS)
-                .data("val", button[0])
-                .data("shift", button[2])
+                .data("val", button[0]) // Container for the current value. 'Normal' by default.
+                .data("shift", button[2]) // Defines the shift value
+                .data("normal", button[0]) // Defines the normal value
                 .html(button[0]);
         }
         else if (button.indexOf("<<") !== -1 && button.indexOf(">>") !== -1) {
@@ -312,8 +313,6 @@ EventManager = {
             .click(function() {
                 var $parent = $(this).closest(lngClass);
 
-                console.log("HERE");
-
                 Core.shift = true;
                 $(EventManager.SHIFT_CLASS).addClass(SELECTED_ITEM_CLASS);
 
@@ -337,7 +336,26 @@ EventManager = {
     },
 
     unshift: function() {
-        var $shiftButtons = $(EventManager.SHIFT_CLASS);
+        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
+            $shiftButtons = $(EventManager.SHIFT_CLASS),
+            $parent = $shiftButtons.closest(lngClass);
+
+        // Set all buttons to upper case
+        $parent.find("." + NORM_BTN_CLASS).each(function() {
+            var $this = $(this),
+                value = $this.data("val").toLowerCase();
+
+            $this.html(value).data("val", value);
+        });
+
+        // Trigger shift button class
+        // TODO
+        $parent.find("." + SHFT_BTN_CLASS).each(function() {
+            var $this = $(this),
+                value = $this.data("normal");
+
+            $this.html(value).data("val", value);
+        });
 
         Core.shift = false;
         $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
@@ -379,6 +397,8 @@ EventManager = {
                             caretOffset: 1
                         };
                     });
+
+                EventManager.unshift();
             });
     },
 

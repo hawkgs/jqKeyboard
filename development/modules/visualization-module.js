@@ -117,8 +117,9 @@ Visualization = { //jshint ignore:line
         }
         else if (button.length === 3) {
             $button.addClass(SHFT_BTN_CLASS)
-                .data("val", button[0])
-                .data("shift", button[2])
+                .data("val", button[0]) // Container for the current value. 'Normal' by default.
+                .data("shift", button[2]) // Defines the shift value
+                .data("normal", button[0]) // Defines the normal value
                 .html(button[0]);
         }
         else if (button.indexOf("<<") !== -1 && button.indexOf(">>") !== -1) {

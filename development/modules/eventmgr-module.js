@@ -71,8 +71,6 @@ EventManager = { //jshint ignore:line
             .click(function() {
                 var $parent = $(this).closest(lngClass);
 
-                console.log("HERE");
-
                 Core.shift = true;
                 $(EventManager.SHIFT_CLASS).addClass(SELECTED_ITEM_CLASS);
 
@@ -96,7 +94,26 @@ EventManager = { //jshint ignore:line
     },
 
     unshift: function() {
-        var $shiftButtons = $(EventManager.SHIFT_CLASS);
+        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
+            $shiftButtons = $(EventManager.SHIFT_CLASS),
+            $parent = $shiftButtons.closest(lngClass);
+
+        // Set all buttons to upper case
+        $parent.find("." + NORM_BTN_CLASS).each(function() {
+            var $this = $(this),
+                value = $this.data("val").toLowerCase();
+
+            $this.html(value).data("val", value);
+        });
+
+        // Trigger shift button class
+        // TODO
+        $parent.find("." + SHFT_BTN_CLASS).each(function() {
+            var $this = $(this),
+                value = $this.data("normal");
+
+            $this.html(value).data("val", value);
+        });
 
         Core.shift = false;
         $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
@@ -138,6 +155,8 @@ EventManager = { //jshint ignore:line
                             caretOffset: 1
                         };
                     });
+
+                EventManager.unshift();
             });
     },
 
