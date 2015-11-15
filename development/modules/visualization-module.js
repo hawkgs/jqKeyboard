@@ -129,6 +129,28 @@ Visualization = { //jshint ignore:line
         return $button;
     },
 
+    /* Creates a special button.
+     * Special buttons: Space, Backspace, Enter, Tab, Shift, CapsLock
+     * */
+    createSpecialBtn: function($button, button) {
+        var buttonStr = button.replace("<<", "").replace(">>", "");
+
+        $button.addClass(SPEC_BTN_CLASS);
+
+        switch (buttonStr) {
+            case "space":
+                $button.data("val", " ");
+                break;
+            case "tab":
+                $button.data("val", "\t");
+                break;
+        }
+
+        $button.addClass(buttonStr);
+
+        return $button;
+    },
+
     // Renders the language/layout switcher
     createLangSwitchBtn: function(language, idx) {
         var $button = $("<button>")
@@ -142,22 +164,5 @@ Visualization = { //jshint ignore:line
         }
 
         this.$langCont.append($button);
-    },
-
-    /* Creates a special button.
-     * Special buttons: Space, Backspace, Enter, Tab, Shift, CapsLock
-     * */
-    createSpecialBtn: function($button, button) {
-        var buttonStr = button.replace("<<", "").replace(">>", "");
-
-        $button.addClass(SPEC_BTN_CLASS);
-
-        if (buttonStr === "space") {
-            $button.data("val", " ").addClass("space");
-        } else {
-            $button.addClass(buttonStr);
-        }
-
-        return $button;
     }
 };

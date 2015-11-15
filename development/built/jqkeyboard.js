@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 27
+ * @build 31
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -207,6 +207,28 @@ Visualization = {
         return $button;
     },
 
+    /* Creates a special button.
+     * Special buttons: Space, Backspace, Enter, Tab, Shift, CapsLock
+     * */
+    createSpecialBtn: function($button, button) {
+        var buttonStr = button.replace("<<", "").replace(">>", "");
+
+        $button.addClass(SPEC_BTN_CLASS);
+
+        switch (buttonStr) {
+            case "space":
+                $button.data("val", " ");
+                break;
+            case "tab":
+                $button.data("val", "\t");
+                break;
+        }
+
+        $button.addClass(buttonStr);
+
+        return $button;
+    },
+
     // Renders the language/layout switcher
     createLangSwitchBtn: function(language, idx) {
         var $button = $("<button>")
@@ -220,23 +242,6 @@ Visualization = {
         }
 
         this.$langCont.append($button);
-    },
-
-    /* Creates a special button.
-     * Special buttons: Space, Backspace, Enter, Tab, Shift, CapsLock
-     * */
-    createSpecialBtn: function($button, button) {
-        var buttonStr = button.replace("<<", "").replace(">>", "");
-
-        $button.addClass(SPEC_BTN_CLASS);
-
-        if (buttonStr === "space") {
-            $button.data("val", " ").addClass("space");
-        } else {
-            $button.addClass(buttonStr);
-        }
-
-        return $button;
     }
 };
 
@@ -266,103 +271,94 @@ EventManager = {
 
     // CAPSLOCK functionality.
     loadCapsLockEvent: function() {
-        var capsLockClass = "." + SPEC_BTN_CLASS + ".capslock",
-            lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
+            capsLockClass = "." + SPEC_BTN_CLASS + ".capslock";
 
-        Visualization.$base
-            .find(lngClass)
-            .find(capsLockClass)
-            .click(function() {
-                var $this = $(this),
-                    $parent = $this.closest(lngClass), // Modify only selected layout
+        this.onLocalButtonClick(capsLockClass, function () {
+            var $this = $(this),
+                $parent = $this.closest(lngClass), // Modify only selected layout
 
-                    // We are checking if the button is selected (has the respective class)
-                    isCapsLockOn = $this.hasClass(SELECTED_ITEM_CLASS);
+                // We are checking if the button is selected (has the respective class)
+                isCapsLockOn = $this.hasClass(SELECTED_ITEM_CLASS);
 
-                if (isCapsLockOn) {
-                    // Core.capsLock = false;
-                    $this.removeClass(SELECTED_ITEM_CLASS);
-                } else {
-                    // Core.capsLock = true;
-                    $this.addClass(SELECTED_ITEM_CLASS);
-                }
+            if (isCapsLockOn) {
+                $this.removeClass(SELECTED_ITEM_CLASS);
+            } else {
+                $this.addClass(SELECTED_ITEM_CLASS);
+            }
 
-                // Set all buttons to upper or lower case
-                $parent.find("." + NORM_BTN_CLASS).each(function() {
-                    var $this = $(this),
-                        value = $this.data("val");
-
-                    if (!isCapsLockOn) {
-                        value = value.toUpperCase();
-                    } else {
-                        value = value.toLowerCase();
-                    }
-
-                    $this.html(value).data("val", value);
-                });
-            });
+            // Set all buttons to upper or lower case
+            EventManager.traverseLetterButtons($parent, !isCapsLockOn);
+        });
     },
 
-    // TODO: Refactor
     // SHIFT functionality.
     loadShiftEvent: function() {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
-        Visualization.$base
-            .find(lngClass)
-            .find(EventManager.SHIFT_CLASS)
-            .click(function() {
-                var $parent = $(this).closest(lngClass);
+        this.onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
+            var $parent = $(this).closest(lngClass);
 
-                Core.shift = true;
-                $(EventManager.SHIFT_CLASS).addClass(SELECTED_ITEM_CLASS);
+            EventManager.traverseInputButtons($parent, true, "shift");
 
-                // Set all buttons to upper case
-                $parent.find("." + NORM_BTN_CLASS).each(function() {
-                    var $this = $(this),
-                        value = $this.data("val").toUpperCase();
-
-                    $this.html(value).data("val", value);
-                });
-
-                // Trigger shift button class
-                // TODO
-                $parent.find("." + SHFT_BTN_CLASS).each(function() {
-                    var $this = $(this),
-                        value = $this.data("shift");
-
-                    $this.html(value).data("val", value);
-                });
-            });
+            Core.shift = true;
+            // Not using $(this) since we have to change all shift buttons
+            $(EventManager.SHIFT_CLASS).addClass(SELECTED_ITEM_CLASS);
+        });
     },
 
-    // TODO: Refactor
+    // Returns all the buttons in their normal state (Opposite of .loadShiftEvent())
     unshift: function() {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
             $shiftButtons = $(EventManager.SHIFT_CLASS),
             $parent = $shiftButtons.closest(lngClass);
 
-        // Set all buttons to upper case
-        $parent.find("." + NORM_BTN_CLASS).each(function() {
-            var $this = $(this),
-                value = $this.data("val").toLowerCase();
-
-            $this.html(value).data("val", value);
-        });
-
-        // Trigger shift button class
-        // TODO
-        $parent.find("." + SHFT_BTN_CLASS).each(function() {
-            var $this = $(this),
-                value = $this.data("normal");
-
-            $this.html(value).data("val", value);
-        });
+        this.traverseInputButtons($parent, false, "normal");
 
         Core.shift = false;
         $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
     },
 
+    // Provides layout/language localized click event.
+    onLocalButtonClick: function (button, handler) {
+        Visualization.$base
+            .find("." + Core.selectedLanguage + LNG_CLASS_POSTFIX)
+            .find(button)
+            .click(handler);
+    },
+
+    // Traverses through all of the letter/normal buttons.
+    traverseLetterButtons: function ($parent, shouldBeUpper) {
+        $parent.find("." + NORM_BTN_CLASS).each(function() {
+            var $this = $(this),
+                value = $this.data("val");
+
+            if (shouldBeUpper) {
+                value = value.toUpperCase();
+            } else {
+                value = value.toLowerCase();
+            }
+
+            $this.html(value).data("val", value);
+        });
+    },
+
+    // Traverses all input buttons.
+    traverseInputButtons: function ($parent, shouldBeUpper, shiftBtnValueSource) {
+        this.traverseLetterButtons($parent, shouldBeUpper);
+
+        $parent.find("." + SHFT_BTN_CLASS).each(function() {
+            var $this = $(this),
+
+                /* Select the source of the wanted button state
+                 * Can be 'normal' or in 'shift' mode */
+                value = $this.data(shiftBtnValueSource);
+
+            $this.html(value).data("val", value);
+        });
+    },
+
+    // BACKSPACE functionality.
     loadBackspaceEvent: function() {
         $("." + SPEC_BTN_CLASS + ".backspace").click(function() {
             EventManager.onDirectTextManip(
@@ -384,11 +380,13 @@ EventManager = {
         });
     },
 
+
     loadInputButtonEvent: function() {
         Visualization.$base
             .find("." + NORM_BTN_CLASS)
             .add("." + SHFT_BTN_CLASS)
             .add("." + SPEC_BTN_CLASS + ".space")
+            .add("." + SPEC_BTN_CLASS + ".tab")
             .click(function() {
                 var selectedBtnVal = $(this).data("val");
 
@@ -427,8 +425,6 @@ EventManager = {
 
             EventManager.$activeElement.val(btnPressResult.updatedContent);
             Helpers.setCaretPosition(activeElemNative, selection.start + btnPressResult.caretOffset);
-
-            // is shift
         }
     },
 
