@@ -61,6 +61,7 @@ EventManager = { //jshint ignore:line
             });
     },
 
+    // TODO: Refactor
     // SHIFT functionality.
     loadShiftEvent: function() {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
@@ -93,6 +94,7 @@ EventManager = { //jshint ignore:line
             });
     },
 
+    // TODO: Refactor
     unshift: function() {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
             $shiftButtons = $(EventManager.SHIFT_CLASS),

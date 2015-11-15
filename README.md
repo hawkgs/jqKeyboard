@@ -1,4 +1,5 @@
-# jqKeyboard
+![jqKeyboard](misc/logo.png)
+============================
 
 jQuery-based virtual keyboard
 
