@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 21
+ * @build 27
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -282,7 +282,7 @@ EventManager = {
                 if (isCapsLockOn) {
                     // Core.capsLock = false;
                     $this.removeClass(SELECTED_ITEM_CLASS);
-                }  else {
+                } else {
                     // Core.capsLock = true;
                     $this.addClass(SELECTED_ITEM_CLASS);
                 }
@@ -292,7 +292,7 @@ EventManager = {
                     var $this = $(this),
                         value = $this.data("val");
 
-                    if (isCapsLockOn) {
+                    if (!isCapsLockOn) {
                         value = value.toUpperCase();
                     } else {
                         value = value.toLowerCase();
@@ -303,6 +303,7 @@ EventManager = {
             });
     },
 
+    // TODO: Refactor
     // SHIFT functionality.
     loadShiftEvent: function() {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
@@ -335,6 +336,7 @@ EventManager = {
             });
     },
 
+    // TODO: Refactor
     unshift: function() {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
             $shiftButtons = $(EventManager.SHIFT_CLASS),
@@ -398,7 +400,9 @@ EventManager = {
                         };
                     });
 
-                EventManager.unshift();
+                if (Core.shift) {
+                    EventManager.unshift();
+                }
             });
     },
 

@@ -40,7 +40,7 @@ EventManager = { //jshint ignore:line
                 if (isCapsLockOn) {
                     // Core.capsLock = false;
                     $this.removeClass(SELECTED_ITEM_CLASS);
-                }  else {
+                } else {
                     // Core.capsLock = true;
                     $this.addClass(SELECTED_ITEM_CLASS);
                 }
@@ -50,7 +50,7 @@ EventManager = { //jshint ignore:line
                     var $this = $(this),
                         value = $this.data("val");
 
-                    if (isCapsLockOn) {
+                    if (!isCapsLockOn) {
                         value = value.toUpperCase();
                     } else {
                         value = value.toLowerCase();
@@ -158,7 +158,9 @@ EventManager = { //jshint ignore:line
                         };
                     });
 
-                EventManager.unshift();
+                if (Core.shift) {
+                    EventManager.unshift();
+                }
             });
     },
 
