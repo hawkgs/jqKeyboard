@@ -41,6 +41,8 @@ gulp.task("_update-build-no", function () {
 
 // Builds the jqkeyboard.js from the separated modules
 gulp.task("default", ["_update-build-no"], function () {
+    console.log("Build No. " + buildNo + " in process ...");
+
     return gulp.src(moduleOrder)
         //.pipe(replace(/\n/g, "    ")) // Adds tabulation to concatenated modules
         .pipe(replace(/"use strict";var/g, "")) // Removes the strict mode from modules (There is global one in wrapper)

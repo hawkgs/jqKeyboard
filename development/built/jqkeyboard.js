@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 31
+ * @build 40
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -213,8 +213,6 @@ Visualization = {
     createSpecialBtn: function($button, button) {
         var buttonStr = button.replace("<<", "").replace(">>", "");
 
-        $button.addClass(SPEC_BTN_CLASS);
-
         switch (buttonStr) {
             case "space":
                 $button.data("val", " ");
@@ -222,9 +220,12 @@ Visualization = {
             case "tab":
                 $button.data("val", "\t");
                 break;
+            case "enter":
+                $button.data("val", "\n");
+                break;
         }
 
-        $button.addClass(buttonStr);
+        $button.addClass(SPEC_BTN_CLASS + " " + buttonStr);
 
         return $button;
     },
@@ -253,6 +254,7 @@ Visualization = {
 EventManager = { 
     // Module-specific constants
     SHIFT_CLASS: "." + SPEC_BTN_CLASS + ".shift",
+    CPSLCK_CLASS: "." + SPEC_BTN_CLASS + ".capslock",
 
     // Language/layout switching functionality.
     loadLanguageSwitcher: function() {
@@ -271,24 +273,28 @@ EventManager = {
 
     // CAPSLOCK functionality.
     loadCapsLockEvent: function() {
-        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
-            capsLockClass = "." + SPEC_BTN_CLASS + ".capslock";
+        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
-        this.onLocalButtonClick(capsLockClass, function () {
-            var $this = $(this),
-                $parent = $this.closest(lngClass), // Modify only selected layout
+        this.onLocalButtonClick(EventManager.CPSLCK_CLASS, function () {
+            var $this, $parent;
 
-                // We are checking if the button is selected (has the respective class)
-                isCapsLockOn = $this.hasClass(SELECTED_ITEM_CLASS);
+            if (Core.shift) {
+                return;
+            }
 
-            if (isCapsLockOn) {
+            $this = $(this);
+            $parent = $this.closest(lngClass); // Modify only selected layout
+
+            if (Core.capsLock) {
                 $this.removeClass(SELECTED_ITEM_CLASS);
+                Core.capsLock = false;
             } else {
                 $this.addClass(SELECTED_ITEM_CLASS);
+                Core.capsLock = true;
             }
 
             // Set all buttons to upper or lower case
-            EventManager.traverseLetterButtons($parent, !isCapsLockOn);
+            EventManager.traverseLetterButtons($parent, Core.capsLock);
         });
     },
 
@@ -297,7 +303,19 @@ EventManager = {
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
         this.onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
-            var $parent = $(this).closest(lngClass);
+            var $parent;
+
+            if (Core.shift) {
+                EventManager.unshift();
+                return;
+            }
+            
+            if (Core.capsLock) {
+                $(EventManager.CPSLCK_CLASS).removeClass(SELECTED_ITEM_CLASS);
+                Core.capsLock = false;
+            }
+
+            $parent = $(this).closest(lngClass);
 
             EventManager.traverseInputButtons($parent, true, "shift");
 
@@ -387,6 +405,7 @@ EventManager = {
             .add("." + SHFT_BTN_CLASS)
             .add("." + SPEC_BTN_CLASS + ".space")
             .add("." + SPEC_BTN_CLASS + ".tab")
+            .add("." + SPEC_BTN_CLASS + ".enter")
             .click(function() {
                 var selectedBtnVal = $(this).data("val");
 
@@ -469,8 +488,11 @@ Core = {
             return;
         }
 
+        // Variables
         Core.options = options;
         Core.selectedLanguage = null;
+        Core.shift = false;
+        Core.capsLock = false;
 
         Visualization.createBase();
         EventManager.loadEvents();

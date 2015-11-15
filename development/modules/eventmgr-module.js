@@ -6,6 +6,7 @@
 EventManager = { //jshint ignore:line
     // Module-specific constants
     SHIFT_CLASS: "." + SPEC_BTN_CLASS + ".shift",
+    CPSLCK_CLASS: "." + SPEC_BTN_CLASS + ".capslock",
 
     // Language/layout switching functionality.
     loadLanguageSwitcher: function() {
@@ -24,24 +25,28 @@ EventManager = { //jshint ignore:line
 
     // CAPSLOCK functionality.
     loadCapsLockEvent: function() {
-        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
-            capsLockClass = "." + SPEC_BTN_CLASS + ".capslock";
+        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
-        this.onLocalButtonClick(capsLockClass, function () {
-            var $this = $(this),
-                $parent = $this.closest(lngClass), // Modify only selected layout
+        this.onLocalButtonClick(EventManager.CPSLCK_CLASS, function () {
+            var $this, $parent;
 
-                // We are checking if the button is selected (has the respective class)
-                isCapsLockOn = $this.hasClass(SELECTED_ITEM_CLASS);
+            if (Core.shift) {
+                return;
+            }
 
-            if (isCapsLockOn) {
+            $this = $(this);
+            $parent = $this.closest(lngClass); // Modify only selected layout
+
+            if (Core.capsLock) {
                 $this.removeClass(SELECTED_ITEM_CLASS);
+                Core.capsLock = false;
             } else {
                 $this.addClass(SELECTED_ITEM_CLASS);
+                Core.capsLock = true;
             }
 
             // Set all buttons to upper or lower case
-            EventManager.traverseLetterButtons($parent, !isCapsLockOn);
+            EventManager.traverseLetterButtons($parent, Core.capsLock);
         });
     },
 
@@ -50,7 +55,19 @@ EventManager = { //jshint ignore:line
         var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
 
         this.onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
-            var $parent = $(this).closest(lngClass);
+            var $parent;
+
+            if (Core.shift) {
+                EventManager.unshift();
+                return;
+            }
+            
+            if (Core.capsLock) {
+                $(EventManager.CPSLCK_CLASS).removeClass(SELECTED_ITEM_CLASS);
+                Core.capsLock = false;
+            }
+
+            $parent = $(this).closest(lngClass);
 
             EventManager.traverseInputButtons($parent, true, "shift");
 
@@ -140,6 +157,7 @@ EventManager = { //jshint ignore:line
             .add("." + SHFT_BTN_CLASS)
             .add("." + SPEC_BTN_CLASS + ".space")
             .add("." + SPEC_BTN_CLASS + ".tab")
+            .add("." + SPEC_BTN_CLASS + ".enter")
             .click(function() {
                 var selectedBtnVal = $(this).data("val");
 

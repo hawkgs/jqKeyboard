@@ -135,8 +135,6 @@ Visualization = { //jshint ignore:line
     createSpecialBtn: function($button, button) {
         var buttonStr = button.replace("<<", "").replace(">>", "");
 
-        $button.addClass(SPEC_BTN_CLASS);
-
         switch (buttonStr) {
             case "space":
                 $button.data("val", " ");
@@ -144,9 +142,12 @@ Visualization = { //jshint ignore:line
             case "tab":
                 $button.data("val", "\t");
                 break;
+            case "enter":
+                $button.data("val", "\n");
+                break;
         }
 
-        $button.addClass(buttonStr);
+        $button.addClass(SPEC_BTN_CLASS + " " + buttonStr);
 
         return $button;
     },

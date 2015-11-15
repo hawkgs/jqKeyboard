@@ -10,8 +10,11 @@ Core = { //jshint ignore:line
             return;
         }
 
+        // Variables
         Core.options = options;
         Core.selectedLanguage = null;
+        Core.shift = false;
+        Core.capsLock = false;
 
         Visualization.createBase();
         EventManager.loadEvents();
