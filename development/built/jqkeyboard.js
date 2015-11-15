@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 40
+ * @build 41
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -260,10 +260,17 @@ EventManager = {
     loadLanguageSwitcher: function() {
         $("." + LANG_BTN_CLASS).click(function() {
             var $this = $(this),
-                newLang = $this.data("lang");
+                newLang = $this.data("lang"),
+                newLangClass = "." + newLang + LNG_CLASS_POSTFIX,
+                currentLngClass = EventManager.getSelectedLngClass();
 
-            $("." + Core.selectedLanguage + LNG_CLASS_POSTFIX).addClass(HIDE_CLASS);
-            $("." + newLang + LNG_CLASS_POSTFIX).removeClass(HIDE_CLASS);
+            if (currentLngClass === newLangClass) {
+                alert("hoho");
+                return;
+            }
+
+            $(currentLngClass).addClass(HIDE_CLASS);
+            $(newLangClass).removeClass(HIDE_CLASS);
             $("." + LANG_BTN_CLASS + "." + SELECTED_ITEM_CLASS).removeClass(SELECTED_ITEM_CLASS);
             $this.addClass(SELECTED_ITEM_CLASS);
 
@@ -271,9 +278,13 @@ EventManager = {
         });
     },
 
+    getSelectedLngClass: function () {
+        return "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+    },
+
     // CAPSLOCK functionality.
     loadCapsLockEvent: function() {
-        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+        var lngClass = this.getSelectedLngClass();
 
         this.onLocalButtonClick(EventManager.CPSLCK_CLASS, function () {
             var $this, $parent;
@@ -300,7 +311,7 @@ EventManager = {
 
     // SHIFT functionality.
     loadShiftEvent: function() {
-        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+        var lngClass = this.getSelectedLngClass();
 
         this.onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
             var $parent;
@@ -309,7 +320,7 @@ EventManager = {
                 EventManager.unshift();
                 return;
             }
-            
+
             if (Core.capsLock) {
                 $(EventManager.CPSLCK_CLASS).removeClass(SELECTED_ITEM_CLASS);
                 Core.capsLock = false;
@@ -327,7 +338,7 @@ EventManager = {
 
     // Returns all the buttons in their normal state (Opposite of .loadShiftEvent())
     unshift: function() {
-        var lngClass = "." + Core.selectedLanguage + LNG_CLASS_POSTFIX,
+        var lngClass = this.getSelectedLngClass(),
             $shiftButtons = $(EventManager.SHIFT_CLASS),
             $parent = $shiftButtons.closest(lngClass);
 
@@ -340,7 +351,7 @@ EventManager = {
     // Provides layout/language localized click event.
     onLocalButtonClick: function (button, handler) {
         Visualization.$base
-            .find("." + Core.selectedLanguage + LNG_CLASS_POSTFIX)
+            .find(this.getSelectedLngClass())
             .find(button)
             .click(handler);
     },
