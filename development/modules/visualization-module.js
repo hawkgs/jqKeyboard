@@ -17,12 +17,12 @@ Visualization = { //jshint ignore:line
         // Creates all defined layouts
         this.createLayout();
 
-        $("body").append(this.$base);
-
         if (Core.options && Core.options.containment) {
             this.containment = $(Core.options.containment);
-            this.setBaseDefaultPos(this.containment.width(), this.containment.height());
+            this.containment.append(this.$base);
         } else {
+            $("body").append(this.$base);
+
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
 
@@ -46,14 +46,6 @@ Visualization = { //jshint ignore:line
 
                 Visualization.$base.draggable("option", "containment", updatedContainment);
             }, 100);
-        });
-    },
-
-    // Sets the default/starting position of the keyboard, if the user hadn't selected containment.
-    setBaseDefaultPos: function(x, y) {
-        this.$base.css({
-            top: x - this.$base.outerWidth() - CUST_CONT_START_OFFSET,
-            left: y - this.$base.outerHeight() - CUST_CONT_START_OFFSET
         });
     },
 

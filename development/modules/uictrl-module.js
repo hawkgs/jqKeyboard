@@ -1,7 +1,7 @@
 "use strict";var//jshint ignore:line
 /*
- * CORE MODULE
- * Entry point of the application
+ * UI CONTROLLER MODULE
+ * Keeps all the ui-related stuff like movement, clicks, dragging.
  * */
 UIController = { //jshint ignore:line
     attachDragToBase: function () {

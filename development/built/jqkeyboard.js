@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 65
+ * @build 81
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -17,6 +17,7 @@ var jqKeyboard = (function($) {
         BUTTON_CLASS = "jqk-btn",
         LANG_BTN_CLASS = "jqk-lang-btn",
         SELECTED_ITEM_CLASS = "selected",
+        DEF_POS_CLASS = "def-pos",
         CLICKED_CLASS ="clicked",
         BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
@@ -97,12 +98,12 @@ Visualization = {
         // Creates all defined layouts
         this.createLayout();
 
-        $("body").append(this.$base);
-
         if (Core.options && Core.options.containment) {
             this.containment = $(Core.options.containment);
-            this.setBaseDefaultPos(this.containment.width(), this.containment.height());
+            this.containment.append(this.$base);
         } else {
+            $("body").append(this.$base);
+
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
 
@@ -126,14 +127,6 @@ Visualization = {
 
                 Visualization.$base.draggable("option", "containment", updatedContainment);
             }, 100);
-        });
-    },
-
-    // Sets the default/starting position of the keyboard, if the user hadn't selected containment.
-    setBaseDefaultPos: function(x, y) {
-        this.$base.css({
-            top: x - this.$base.outerWidth() - CUST_CONT_START_OFFSET,
-            left: y - this.$base.outerHeight() - CUST_CONT_START_OFFSET
         });
     },
 
@@ -267,9 +260,10 @@ EventManager = {
             $(newLangClass).removeClass(HIDE_CLASS);
             $("." + LANG_BTN_CLASS + "." + SELECTED_ITEM_CLASS).removeClass(SELECTED_ITEM_CLASS);
             $this.addClass(SELECTED_ITEM_CLASS);
-            
+
             Core.selectedLanguage = newLang;
 
+            // Reassign CapsLock and Shift buttons to their corresponding layout/language
             EventManager.loadCapsLockEvent();
             EventManager.loadShiftEvent();
         });
@@ -487,8 +481,8 @@ EventManager = {
 
 
 /*
- * CORE MODULE
- * Entry point of the application
+ * UI CONTROLLER MODULE
+ * Keeps all the ui-related stuff like movement, clicks, dragging.
  * */
 UIController = { 
     attachDragToBase: function () {

@@ -24,9 +24,10 @@ EventManager = { //jshint ignore:line
             $(newLangClass).removeClass(HIDE_CLASS);
             $("." + LANG_BTN_CLASS + "." + SELECTED_ITEM_CLASS).removeClass(SELECTED_ITEM_CLASS);
             $this.addClass(SELECTED_ITEM_CLASS);
-            
+
             Core.selectedLanguage = newLang;
 
+            // Reassign CapsLock and Shift buttons to their corresponding layout/language
             EventManager.loadCapsLockEvent();
             EventManager.loadShiftEvent();
         });

@@ -5,6 +5,7 @@ body {
 }
 
 #test-cont {
+    position: relative;
     width: 700px;
     height: 500px;
     border: 1px solid red;

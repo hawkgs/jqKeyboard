@@ -12,7 +12,4 @@ jqKeyboard.layouts = [{
             "<<capslock>> \u044C \u044F \u0430 \u043E \u0436 \u0433 \u0442 \u043D \u0432 \u043C \u0447 \u201E|\u201C <<enter>>",
             "<<shift>> \u045D \u044E \u0439 \u044A \u044D \u0444 \u0445 \u043F \u0440 \u043B \u0431 <<shift>>",
             "<<space>>"]
-}, {
-    lang: "pepe",
-    layout: ["p e p e"]
 }];
