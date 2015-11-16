@@ -8,7 +8,13 @@ UIController = { //jshint ignore:line
         // Attaches drag event
         Visualization.$base.draggable({
             containment: Visualization.containment,
-            cursor: "move"
+            cursor: "move",
+            stop: function () {
+                $(this).css({
+                    width: "auto",
+                    height: "auto"
+                });
+            }
         });
     },
 

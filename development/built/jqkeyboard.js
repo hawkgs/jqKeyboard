@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 62
+ * @build 65
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -495,7 +495,13 @@ UIController = {
         // Attaches drag event
         Visualization.$base.draggable({
             containment: Visualization.containment,
-            cursor: "move"
+            cursor: "move",
+            stop: function () {
+                $(this).css({
+                    width: "auto",
+                    height: "auto"
+                });
+            }
         });
     },
 

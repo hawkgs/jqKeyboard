@@ -38,7 +38,6 @@
 
 .jqk-btn:hover {
     box-shadow: 0 0 2px 2px #1c94c4;
-    //background: rgba(66, 223, 255, 0.9);
     transition: box-shadow 0.3s ease;
 }
 
@@ -126,6 +125,10 @@
 #jqk-lang-cont > .jqk-lang-btn:last-child {
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
+}
+
+#jqk-lang-cont > .jqk-lang-btn:only-child {
+    border-radius: 3px;
 }
 
 /*tmp*/
