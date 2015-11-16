@@ -9,6 +9,8 @@ var jqKeyboard = (function($) {
         BUTTON_CLASS = "jqk-btn",
         LANG_BTN_CLASS = "jqk-lang-btn",
         SELECTED_ITEM_CLASS = "selected",
+        CLICKED_CLASS ="clicked",
+        BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",
         LANG_CONT_ID = "jqk-lang-cont",
@@ -20,7 +22,7 @@ var jqKeyboard = (function($) {
         Visualization = {},
         EventManager = {},
         Helpers = {},
-        Effects = {},
+        UIController = {},
         Core = {};
 
 //<%= contents %>

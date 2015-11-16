@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 41
+ * @build 51
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -17,6 +17,8 @@ var jqKeyboard = (function($) {
         BUTTON_CLASS = "jqk-btn",
         LANG_BTN_CLASS = "jqk-lang-btn",
         SELECTED_ITEM_CLASS = "selected",
+        CLICKED_CLASS ="clicked",
+        BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",
         LANG_CONT_ID = "jqk-lang-cont",
@@ -28,7 +30,7 @@ var jqKeyboard = (function($) {
         Visualization = {},
         EventManager = {},
         Helpers = {},
-        Effects = {},
+        UIController = {},
         Core = {};
 
 //
@@ -85,8 +87,7 @@ Visualization = {
 
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
     createBase: function() {
-        var containment,
-            contDefaultX,
+        var contDefaultX,
             contDefaultY;
 
         this.$base = $("<div>").attr("id", BASE_ID);
@@ -99,22 +100,16 @@ Visualization = {
         $("body").append(this.$base);
 
         if (Core.options && Core.options.containment) {
-            containment = $(Core.options.containment);
-            Visualization.setBaseDefaultPos(containment.width(), containment.height());
+            this.containment = $(Core.options.containment);
+            this.setBaseDefaultPos(containment.width(), this.containment.height());
         } else {
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
 
-            containment = [CONT_START_POINT, CONT_START_POINT, contDefaultX, contDefaultY];
+            this.containment = [CONT_START_POINT, CONT_START_POINT, contDefaultX, contDefaultY];
 
             this.maintainContainment();
         }
-
-        // Attaches drag event
-        this.$base.draggable({
-            containment: containment,
-            cursor: "move"
-        });
     },
 
     // Keeps the user defined containment of the keyboard on window resize.
@@ -172,7 +167,7 @@ Visualization = {
         }
 
         for (i = 0; i < layoutObj.layout.length; i += 1) {
-            $row = $("<div>");
+            $row = $("<div>").addClass(BTN_ROW_CLASS);
             buttons = layoutObj.layout[i].split(" ");
 
             for (j = 0; j < buttons.length; j += 1) {
@@ -265,7 +260,6 @@ EventManager = {
                 currentLngClass = EventManager.getSelectedLngClass();
 
             if (currentLngClass === newLangClass) {
-                alert("hoho");
                 return;
             }
 
@@ -278,6 +272,7 @@ EventManager = {
         });
     },
 
+    // todo rf
     getSelectedLngClass: function () {
         return "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
     },
@@ -492,6 +487,35 @@ EventManager = {
  * CORE MODULE
  * Entry point of the application
  * */
+UIController = { 
+    attachDragToBase: function () {
+        // Attaches drag event
+        Visualization.$base.draggable({
+            containment: Visualization.containment,
+            cursor: "move"
+        });
+    },
+
+    attachOnClickBtnEvent: function () {
+        $("." + BUTTON_CLASS).mousedown(function () {
+                $(this).addClass(CLICKED_CLASS);
+            })
+            .mouseup(function () {
+                $(this).removeClass(CLICKED_CLASS);
+            });
+    },
+
+    load: function () {
+        this.attachDragToBase();
+        this.attachOnClickBtnEvent();
+    }
+};
+
+
+/*
+ * CORE MODULE
+ * Entry point of the application
+ * */
 Core = { 
     init: function(options) {
         if (!jqKeyboard.layouts) {
@@ -507,6 +531,7 @@ Core = {
 
         Visualization.createBase();
         EventManager.loadEvents();
+        UIController.load();
     }
 };
 

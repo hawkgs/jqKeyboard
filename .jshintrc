@@ -100,6 +100,8 @@
     "BUTTON_CLASS",
     "LANG_BTN_CLASS",
     "SELECTED_ITEM_CLASS",
+    "CLICKED_CLASS",
+    "BTN_ROW_CLASS",
     "HIDE_CLASS",
     "BASE_ID",
     "LANG_CONT_ID",
@@ -111,6 +113,7 @@
     "Helpers",
     "Visualization",
     "EventManager",
+    "UIController",
     "Core"
   ]
 }

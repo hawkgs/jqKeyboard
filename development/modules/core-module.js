@@ -18,5 +18,6 @@ Core = { //jshint ignore:line
 
         Visualization.createBase();
         EventManager.loadEvents();
+        UIController.load();
     }
 };

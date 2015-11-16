@@ -24,6 +24,7 @@ moduleOrder = [
     gh.modulePath("helpers"),
     gh.modulePath("visualization"),
     gh.modulePath("eventmgr"),
+    gh.modulePath("uictrl"),
     gh.modulePath("core")
 ];
 

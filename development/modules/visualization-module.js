@@ -7,8 +7,7 @@ Visualization = { //jshint ignore:line
 
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
     createBase: function() {
-        var containment,
-            contDefaultX,
+        var contDefaultX,
             contDefaultY;
 
         this.$base = $("<div>").attr("id", BASE_ID);
@@ -21,22 +20,16 @@ Visualization = { //jshint ignore:line
         $("body").append(this.$base);
 
         if (Core.options && Core.options.containment) {
-            containment = $(Core.options.containment);
-            Visualization.setBaseDefaultPos(containment.width(), containment.height());
+            this.containment = $(Core.options.containment);
+            this.setBaseDefaultPos(containment.width(), this.containment.height());
         } else {
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
 
-            containment = [CONT_START_POINT, CONT_START_POINT, contDefaultX, contDefaultY];
+            this.containment = [CONT_START_POINT, CONT_START_POINT, contDefaultX, contDefaultY];
 
             this.maintainContainment();
         }
-
-        // Attaches drag event
-        this.$base.draggable({
-            containment: containment,
-            cursor: "move"
-        });
     },
 
     // Keeps the user defined containment of the keyboard on window resize.
@@ -94,7 +87,7 @@ Visualization = { //jshint ignore:line
         }
 
         for (i = 0; i < layoutObj.layout.length; i += 1) {
-            $row = $("<div>");
+            $row = $("<div>").addClass(BTN_ROW_CLASS);
             buttons = layoutObj.layout[i].split(" ");
 
             for (j = 0; j < buttons.length; j += 1) {
