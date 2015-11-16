@@ -21,7 +21,7 @@ Visualization = { //jshint ignore:line
 
         if (Core.options && Core.options.containment) {
             this.containment = $(Core.options.containment);
-            this.setBaseDefaultPos(containment.width(), this.containment.height());
+            this.setBaseDefaultPos(this.containment.width(), this.containment.height());
         } else {
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();

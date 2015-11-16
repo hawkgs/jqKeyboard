@@ -1,14 +1,15 @@
 #jq-keyboard {
     position: absolute;
-    padding: 15px 15px 10px 15px;
+    padding: 10px 10px 5px 10px;
     border-radius: 3px;
-    border-bottom: 3px solid #999;
+    border-bottom: 3px solid #CCC;
     width: auto;
     height: auto;
     bottom: 10px;
     right: 10px;
     box-shadow: 0 2px 7px 0 rgba(0, 0, 0, 0.5);
     background: #FFF;
+    overflow: hidden;
 }
 
 #jqk-lang-cont {
@@ -27,20 +28,31 @@
     color: #666;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.jqk-btn:focus {
+    outline: none;
 }
 
 .jqk-btn:hover {
-    //box-shadow: 0 0 5px 0 rgba(66, 223, 255, 0.2);
-    background: rgba(66, 223, 255, 0.9);
-    cursor: pointer;
+    box-shadow: 0 0 2px 2px #1c94c4;
+    //background: rgba(66, 223, 255, 0.9);
+    transition: box-shadow 0.3s ease;
 }
 
 #jq-keyboard .btn-row {
     text-align: center;
     margin-bottom: 5px;
+    height: 35px;
 }
 
-.clicked {
+.btn-row:last-child {
+//    margin-bottom: 10px;
+}
+
+.clicked, .jqk-btn.selected {
     position: relative;
     top: 2px;
     height: 33px;
@@ -75,8 +87,45 @@
     display: none;
 }
 
-.selected {
-    background: purple;
+.jqk-btn.selected {
+    //box-shadow: inset 0 0 3px 0 #3a8104;
+    color: #CCC;
+}
+
+.jqk-btn.selected:before {
+    position: absolute;
+    width: 7px; height: 7px;
+    border-radius: 7px;
+    background: #4eb305;
+    top: 5px; left: 5px;
+}
+
+.jqk-lang-btn {
+    font-size: 10px;
+    margin-left: 0;
+    background: #EEE;
+    color: #666;
+    border: none;
+    cursor: pointer;
+}
+
+.jqk-lang-btn:hover {
+    color: #222;
+}
+
+.jqk-lang-btn.selected {
+    background: #1c94c4;
+    color: #FFF;
+}
+
+#jqk-lang-cont > .jqk-lang-btn:first-child {
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+}
+
+#jqk-lang-cont > .jqk-lang-btn:last-child {
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
 }
 
 /*tmp*/

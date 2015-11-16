@@ -14,7 +14,13 @@ UIController = { //jshint ignore:line
 
     attachOnClickBtnEvent: function () {
         $("." + BUTTON_CLASS).mousedown(function () {
-                $(this).addClass(CLICKED_CLASS);
+                var $this = $(this);
+
+                $this.addClass(CLICKED_CLASS);
+
+                setTimeout(function () {
+                    $this.removeClass(CLICKED_CLASS);
+                }, 500);
             })
             .mouseup(function () {
                 $(this).removeClass(CLICKED_CLASS);

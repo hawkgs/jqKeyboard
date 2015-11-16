@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 51
+ * @build 62
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -101,7 +101,7 @@ Visualization = {
 
         if (Core.options && Core.options.containment) {
             this.containment = $(Core.options.containment);
-            this.setBaseDefaultPos(containment.width(), this.containment.height());
+            this.setBaseDefaultPos(this.containment.width(), this.containment.height());
         } else {
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
@@ -267,8 +267,11 @@ EventManager = {
             $(newLangClass).removeClass(HIDE_CLASS);
             $("." + LANG_BTN_CLASS + "." + SELECTED_ITEM_CLASS).removeClass(SELECTED_ITEM_CLASS);
             $this.addClass(SELECTED_ITEM_CLASS);
-
+            
             Core.selectedLanguage = newLang;
+
+            EventManager.loadCapsLockEvent();
+            EventManager.loadShiftEvent();
         });
     },
 
@@ -498,7 +501,13 @@ UIController = {
 
     attachOnClickBtnEvent: function () {
         $("." + BUTTON_CLASS).mousedown(function () {
-                $(this).addClass(CLICKED_CLASS);
+                var $this = $(this);
+
+                $this.addClass(CLICKED_CLASS);
+
+                setTimeout(function () {
+                    $this.removeClass(CLICKED_CLASS);
+                }, 500);
             })
             .mouseup(function () {
                 $(this).removeClass(CLICKED_CLASS);
