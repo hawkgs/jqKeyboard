@@ -3,6 +3,7 @@ var jqKeyboard = (function($) {
 
         // CONSTANTS
     var CUST_CONT_START_OFFSET = 10,
+        DEF_ALLOWED_ELEMENTS = "input, textarea",
         NORM_BTN_CLASS = "normal",
         SHFT_BTN_CLASS = "shift-b",
         SPEC_BTN_CLASS = "special",

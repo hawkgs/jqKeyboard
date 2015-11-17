@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 83
+ * @build 87
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -11,6 +11,7 @@ var jqKeyboard = (function($) {
 
         // CONSTANTS
     var CUST_CONT_START_OFFSET = 10,
+        DEF_ALLOWED_ELEMENTS = "input, textarea",
         NORM_BTN_CLASS = "normal",
         SHFT_BTN_CLASS = "shift-b",
         SPEC_BTN_CLASS = "special",
@@ -456,7 +457,15 @@ EventManager = {
     // Changes the active element on each new cursor focus
     activeElementListener: function() {
         // Those are the allowed active elements
-        $("input, textarea").focus(function() {
+        var allowedElements;
+
+        if (Core.options && Core.options.allowed) {
+            allowedElements = Core.options.allowed.join(", ");
+        } else {
+            allowedElements = DEF_ALLOWED_ELEMENTS;
+        }
+        
+        $(allowedElements).focus(function() {
             EventManager.$activeElement = $(this);
         });
     },

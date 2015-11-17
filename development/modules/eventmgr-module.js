@@ -217,7 +217,15 @@ EventManager = { //jshint ignore:line
     // Changes the active element on each new cursor focus
     activeElementListener: function() {
         // Those are the allowed active elements
-        $("input, textarea").focus(function() {
+        var allowedElements;
+
+        if (Core.options && Core.options.allowed) {
+            allowedElements = Core.options.allowed.join(", ");
+        } else {
+            allowedElements = DEF_ALLOWED_ELEMENTS;
+        }
+
+        $(allowedElements).focus(function() {
             EventManager.$activeElement = $(this);
         });
     },
