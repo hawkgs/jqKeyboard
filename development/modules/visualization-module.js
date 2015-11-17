@@ -12,6 +12,8 @@ Visualization = { //jshint ignore:line
 
         this.$base = $("<div>").attr("id", BASE_ID);
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
+        this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
+        this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
 
         // Creates all defined layouts

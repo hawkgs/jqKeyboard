@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 81
+ * @build 83
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -19,6 +19,7 @@ var jqKeyboard = (function($) {
         SELECTED_ITEM_CLASS = "selected",
         DEF_POS_CLASS = "def-pos",
         CLICKED_CLASS ="clicked",
+        MIN_BTN_CLASS = "minimize-btn",
         BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",
@@ -93,6 +94,8 @@ Visualization = {
 
         this.$base = $("<div>").attr("id", BASE_ID);
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
+        this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
+        this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
 
         // Creates all defined layouts
@@ -514,9 +517,17 @@ UIController = {
             });
     },
 
+    minimizeKeyboard: function () {
+        Visualization.$minBtn.click(function () {
+            // todo
+            console.log("todo");
+        });
+    },
+
     load: function () {
         this.attachDragToBase();
         this.attachOnClickBtnEvent();
+        this.minimizeKeyboard();
     }
 };
 

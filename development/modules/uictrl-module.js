@@ -33,8 +33,16 @@ UIController = { //jshint ignore:line
             });
     },
 
+    minimizeKeyboard: function () {
+        Visualization.$minBtn.click(function () {
+            // todo
+            console.log("todo");
+        });
+    },
+
     load: function () {
         this.attachDragToBase();
         this.attachOnClickBtnEvent();
+        this.minimizeKeyboard();
     }
 };
