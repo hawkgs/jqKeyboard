@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 87
+ * @build 90
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -217,7 +217,7 @@ Visualization = {
                 break;
         }
 
-        $button.addClass(SPEC_BTN_CLASS + " " + buttonStr);
+        $button.addClass(SPEC_BTN_CLASS + " " + buttonStr).html("&nbsp;");
 
         return $button;
     },
@@ -464,7 +464,7 @@ EventManager = {
         } else {
             allowedElements = DEF_ALLOWED_ELEMENTS;
         }
-        
+
         $(allowedElements).focus(function() {
             EventManager.$activeElement = $(this);
         });

@@ -134,7 +134,7 @@ Visualization = { //jshint ignore:line
                 break;
         }
 
-        $button.addClass(SPEC_BTN_CLASS + " " + buttonStr);
+        $button.addClass(SPEC_BTN_CLASS + " " + buttonStr).html("&nbsp;");
 
         return $button;
     },
