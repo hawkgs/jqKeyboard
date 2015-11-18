@@ -70,7 +70,9 @@ EventManager = { //jshint ignore:line
         var lngClass = this.getSelectedLngClass();
 
         this.onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
-            var $parent;
+            var $shiftButtons = $(EventManager.getSelectedLngClass()).find(EventManager.SHIFT_CLASS),
+                $parent;
+
 
             if (Core.shift) {
                 EventManager.unshift();
@@ -88,14 +90,14 @@ EventManager = { //jshint ignore:line
 
             Core.shift = true;
             // Not using $(this) since we have to change all shift buttons
-            $(EventManager.SHIFT_CLASS).addClass(SELECTED_ITEM_CLASS);
+            $shiftButtons.addClass(SELECTED_ITEM_CLASS); //todo
         });
     },
 
     // Returns all the buttons in their normal state (Opposite of .loadShiftEvent())
     unshift: function() {
         var lngClass = this.getSelectedLngClass(),
-            $shiftButtons = $(EventManager.SHIFT_CLASS),
+            $shiftButtons = $(EventManager.getSelectedLngClass()).find(EventManager.SHIFT_CLASS), //todo
             $parent = $shiftButtons.closest(lngClass);
 
         this.traverseInputButtons($parent, false, "normal");
