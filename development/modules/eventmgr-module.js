@@ -242,8 +242,9 @@ EventManager = { //jshint ignore:line
         });
     },
 
+    // ENTRY POINT
     // Used for selecting which events to load at once.
-    loadEvents: function() {
+    $$loadEvents: function() {
         this.activeElementListener();
         this.loadLanguageSwitcher();
         this.loadInputButtonEvent();

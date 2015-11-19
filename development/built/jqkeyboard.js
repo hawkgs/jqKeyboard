@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 92
+ * @build 95
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -88,8 +88,9 @@ Helpers = {
  * */
 Visualization = { 
 
+    // ENTRY POINT
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
-    createBase: function() {
+    $$createBase: function() {
         var contDefaultX,
             contDefaultY;
 
@@ -482,8 +483,9 @@ EventManager = {
         });
     },
 
+    // ENTRY POINT
     // Used for selecting which events to load at once.
-    loadEvents: function() {
+    $$loadEvents: function() {
         this.activeElementListener();
         this.loadLanguageSwitcher();
         this.loadInputButtonEvent();
@@ -499,12 +501,14 @@ EventManager = {
  * Keeps all the ui-related stuff like movement, clicks, dragging.
  * */
 UIController = { 
+
+    // Attaches drag event to the keyboard
     attachDragToBase: function () {
-        // Attaches drag event
         Visualization.$base.draggable({
             containment: Visualization.containment,
             cursor: "move",
             stop: function () {
+                // Tweak: reassigns the auto-resize feature of the keyboard. (Needed on layout/language switch)
                 $(this).css({
                     width: "auto",
                     height: "auto"
@@ -513,12 +517,15 @@ UIController = {
         });
     },
 
+    // Used for visual representation of button clicking.
     attachOnClickBtnEvent: function () {
         $("." + BUTTON_CLASS).mousedown(function () {
                 var $this = $(this);
 
                 $this.addClass(CLICKED_CLASS);
 
+                // Used if the user moves the mouse cursor away from a button when holding clicked.
+                // The following code will un-click the button.
                 setTimeout(function () {
                     $this.removeClass(CLICKED_CLASS);
                 }, 500);
@@ -528,6 +535,7 @@ UIController = {
             });
     },
 
+    // Minimization feature
     minimizeKeyboard: function () {
         Visualization.$minBtn.click(function () {
             // todo
@@ -535,7 +543,8 @@ UIController = {
         });
     },
 
-    load: function () {
+    // ENTRY POINT
+    $$load: function () {
         this.attachDragToBase();
         this.attachOnClickBtnEvent();
         this.minimizeKeyboard();
@@ -548,23 +557,41 @@ UIController = {
  * Entry point of the application
  * */
 Core = { 
-    init: function(options) {
+    isReadyToRun: function () {
+        // Checks whether a layout script is loaded.
         if (!jqKeyboard.layouts) {
             console.error("jqKeyboard: The keyboard layout configuration file hasn't been loaded.");
+            return false;
+        }
+
+        // Checks if the library is already running in the current context.
+        if (this.isRunning) {
+            console.error("jqKeyboard: The library is already used/running in the current context/page.");
+            return false;
+        }
+
+        return true;
+    },
+
+    init: function(options) {
+        if (!Core.isReadyToRun()) {
             return;
         }
 
         // Variables
         Core.options = options;
+        Core.isRunning = true;
         Core.selectedLanguage = null;
         Core.shift = false;
         Core.capsLock = false;
 
-        Visualization.createBase();
-        EventManager.loadEvents();
-        UIController.load();
+        // Load modules
+        Visualization.$$createBase();
+        EventManager.$$loadEvents();
+        UIController.$$load();
     }
 };
+
 
     return {
         init: Core.init

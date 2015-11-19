@@ -5,8 +5,9 @@
  * */
 Visualization = { //jshint ignore:line
 
+    // ENTRY POINT
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
-    createBase: function() {
+    $$createBase: function() {
         var contDefaultX,
             contDefaultY;
 
