@@ -3,7 +3,7 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 95
+ * @build 102
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -56,6 +56,11 @@ Helpers = {
         return string.slice(0, selection.start - caretOffset) + string.slice(selection.end);
     },
 
+    // Returns the currently selected language class.
+    getSelectedLangClass: function () {
+        return "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+    },
+
     /*
      * Credits goes to kd7
      * Source: http://stackoverflow.com/questions/512528/set-cursor-position-in-html-textbox
@@ -97,6 +102,7 @@ Visualization = {
         this.$base = $("<div>").attr("id", BASE_ID);
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
         this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
+
         this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
 
@@ -179,13 +185,17 @@ Visualization = {
         return $layoutCont;
     },
 
-    // Returns <button> from given command string.
+    // Returns <button> from a given command string.
     buildButtonFromString: function(button) {
         var $button = $("<button>").addClass(BUTTON_CLASS);
 
+        // Normal/regular
         if (button.length === 1) {
-            $button.addClass(NORM_BTN_CLASS).data("val", button).html(button);
+            $button.addClass(NORM_BTN_CLASS)
+                .data("val", button) // Container for the value.
+                .html(button);
         }
+        // Shift-active
         else if (button.length === 3) {
             $button.addClass(SHFT_BTN_CLASS)
                 .data("val", button[0]) // Container for the current value. 'Normal' by default.
@@ -193,6 +203,7 @@ Visualization = {
                 .data("normal", button[0]) // Defines the normal value
                 .html(button[0]);
         }
+        // Special
         else if (button.indexOf("<<") !== -1 && button.indexOf(">>") !== -1) {
             $button = this.createSpecialBtn($button, button);
         }
@@ -219,6 +230,7 @@ Visualization = {
         }
 
         $button.addClass(SPEC_BTN_CLASS + " " + buttonStr).html("&nbsp;");
+        // NB space is needed for visual purposes .............. ^^^^^^
 
         return $button;
     },
@@ -240,9 +252,14 @@ Visualization = {
 };
 
 
+
 /*
  * EVENTMANAGER MODULE
  * Manages all keyboard related events - button functionality, language switching, etc.
+ *
+ * Function description:
+ * - $$....() - Entry point / module runner.
+ * - _.....() - Functions out of module runner scope (sort of helpers).
  * */
 EventManager = { 
     // Module-specific constants
@@ -255,8 +272,11 @@ EventManager = {
             var $this = $(this),
                 newLang = $this.data("lang"),
                 newLangClass = "." + newLang + LNG_CLASS_POSTFIX,
-                currentLngClass = EventManager.getSelectedLngClass();
+                currentLngClass = Helpers.getSelectedLangClass();
 
+            EventManager._resetCaretOfActiveElem();
+
+            // If already selected - abort
             if (currentLngClass === newLangClass) {
                 return;
             }
@@ -274,17 +294,14 @@ EventManager = {
         });
     },
 
-    // todo rf
-    getSelectedLngClass: function () {
-        return "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
-    },
-
     // CAPSLOCK functionality.
     loadCapsLockEvent: function() {
-        var lngClass = this.getSelectedLngClass();
+        var lngClass = Helpers.getSelectedLangClass();
 
-        this.onLocalButtonClick(EventManager.CPSLCK_CLASS, function () {
+        this._onLocalButtonClick(EventManager.CPSLCK_CLASS, function () {
             var $this, $parent;
+
+            EventManager._resetCaretOfActiveElem();
 
             if (Core.shift) {
                 return;
@@ -302,21 +319,22 @@ EventManager = {
             }
 
             // Set all buttons to upper or lower case
-            EventManager.traverseLetterButtons($parent, Core.capsLock);
+            EventManager._traverseLetterButtons($parent, Core.capsLock);
         });
     },
 
     // SHIFT functionality.
     loadShiftEvent: function() {
-        var lngClass = this.getSelectedLngClass();
+        var lngClass = Helpers.getSelectedLangClass();
 
-        this.onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
-            var $shiftButtons = $(EventManager.getSelectedLngClass()).find(EventManager.SHIFT_CLASS),
+        this._onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
+            var $shiftButtons = $(Helpers.getSelectedLangClass()).find(EventManager.SHIFT_CLASS),
                 $parent;
 
+            EventManager._resetCaretOfActiveElem();
 
             if (Core.shift) {
-                EventManager.unshift();
+                EventManager._unshift();
                 return;
             }
 
@@ -327,7 +345,7 @@ EventManager = {
 
             $parent = $(this).closest(lngClass);
 
-            EventManager.traverseInputButtons($parent, true, "shift");
+            EventManager._traverseInputButtons($parent, true, "shift");
 
             Core.shift = true;
             // Not using $(this) since we have to change all shift buttons
@@ -335,61 +353,10 @@ EventManager = {
         });
     },
 
-    // Returns all the buttons in their normal state (Opposite of .loadShiftEvent())
-    unshift: function() {
-        var lngClass = this.getSelectedLngClass(),
-            $shiftButtons = $(EventManager.getSelectedLngClass()).find(EventManager.SHIFT_CLASS), //todo
-            $parent = $shiftButtons.closest(lngClass);
-
-        this.traverseInputButtons($parent, false, "normal");
-
-        Core.shift = false;
-        $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
-    },
-
-    // Provides layout/language localized click event.
-    onLocalButtonClick: function (button, handler) {
-        Visualization.$base
-            .find(this.getSelectedLngClass())
-            .find(button)
-            .click(handler);
-    },
-
-    // Traverses through all of the letter/normal buttons.
-    traverseLetterButtons: function ($parent, shouldBeUpper) {
-        $parent.find("." + NORM_BTN_CLASS).each(function() {
-            var $this = $(this),
-                value = $this.data("val");
-
-            if (shouldBeUpper) {
-                value = value.toUpperCase();
-            } else {
-                value = value.toLowerCase();
-            }
-
-            $this.html(value).data("val", value);
-        });
-    },
-
-    // Traverses all input buttons.
-    traverseInputButtons: function ($parent, shouldBeUpper, shiftBtnValueSource) {
-        this.traverseLetterButtons($parent, shouldBeUpper);
-
-        $parent.find("." + SHFT_BTN_CLASS).each(function() {
-            var $this = $(this),
-
-                /* Select the source of the wanted button state
-                 * Can be 'normal' or in 'shift' mode */
-                value = $this.data(shiftBtnValueSource);
-
-            $this.html(value).data("val", value);
-        });
-    },
-
     // BACKSPACE functionality.
     loadBackspaceEvent: function() {
         $("." + SPEC_BTN_CLASS + ".backspace").click(function() {
-            EventManager.onDirectTextManip(
+            EventManager._onActiveElemTextManipulation(
                 function(selection, currentContent) {
                     var backspaceCaretOffset;
 
@@ -408,39 +375,68 @@ EventManager = {
         });
     },
 
-
+    // INPUT BUTTONS functionality (All those who are entering text).
     loadInputButtonEvent: function() {
         Visualization.$base
-            .find("." + NORM_BTN_CLASS)
-            .add("." + SHFT_BTN_CLASS)
+            .find("." + NORM_BTN_CLASS) // Normal
+            .add("." + SHFT_BTN_CLASS) // Shift-active
             .add("." + SPEC_BTN_CLASS + ".space")
             .add("." + SPEC_BTN_CLASS + ".tab")
             .add("." + SPEC_BTN_CLASS + ".enter")
             .click(function() {
                 var selectedBtnVal = $(this).data("val");
 
-                EventManager.onDirectTextManip(
-                    function(selection, currentContent) {
-                        return {
-                            updatedContent: Helpers.insertCharacter(currentContent, selection, selectedBtnVal),
-                            caretOffset: 1
-                        };
-                    });
+                EventManager._onActiveElemTextManipulation(function(selection, currentContent) {
+                    return {
+                        updatedContent: Helpers.insertCharacter(currentContent, selection, selectedBtnVal),
+                        caretOffset: 1
+                    };
+                });
 
                 if (Core.shift) {
-                    EventManager.unshift();
+                    EventManager._unshift();
                 }
             });
     },
 
-    onDirectTextManip: function(btnFunctionality) {
+    // Changes the active element on each new cursor focus
+    activeElementListener: function() {
+        var allowedElements;
+
+        // Pick user-assigned allowed elements or default ones
+        if (Core.options && Core.options.allowed) {
+            allowedElements = Core.options.allowed.join(", ");
+        } else {
+            allowedElements = DEF_ALLOWED_ELEMENTS;
+        }
+
+        // Set
+        $(allowedElements).focus(function() {
+            EventManager.$activeElement = $(this);
+        });
+    },
+
+    // todo
+    // Reassigns the current active element whenever the user clicks somewhere else (eg. keyboard buttons)
+    /*reassignActiveElementFocus: function() {
+        this.$activeElement.blur(function () {
+            setTimeout(function () {
+                EventManager.$activeElement.focus(function(event) {
+                    event.stopPropagation();
+                });
+            }, 25);
+        });
+    },*/
+
+    _onActiveElemTextManipulation: function(btnFunctionality) {
         var activeElemNative,
             currentContent,
             btnPressResult,
             selection;
 
         if (EventManager.$activeElement) {
-            EventManager.resetActiveElementFocus();
+            // Needs to be reassigned since you are clicking on a KB button.
+            //EventManager.reassignActiveElementFocus(); todo
 
             currentContent = EventManager.$activeElement.val() || "";
             activeElemNative = EventManager.$activeElement[0];
@@ -457,29 +453,65 @@ EventManager = {
         }
     },
 
-    // Changes the active element on each new cursor focus
-    activeElementListener: function() {
-        // Those are the allowed active elements
-        var allowedElements;
-
-        if (Core.options && Core.options.allowed) {
-            allowedElements = Core.options.allowed.join(", ");
-        } else {
-            allowedElements = DEF_ALLOWED_ELEMENTS;
+    // Resets the caret to the same position of the currently selected active element.
+    _resetCaretOfActiveElem: function () {
+        if (!this.$activeElement) {
+            return;
         }
 
-        $(allowedElements).focus(function() {
-            EventManager.$activeElement = $(this);
+        Helpers.setCaretPosition(this.$activeElement[0], this.$activeElement[0].selectionStart);
+    },
+
+    // Returns all the buttons in their normal state (Opposite of .loadShiftEvent())
+    _unshift: function() {
+        var lngClass = Helpers.getSelectedLangClass(),
+            $shiftButtons = $(Helpers.getSelectedLangClass()).find(EventManager.SHIFT_CLASS), //todo
+            $parent = $shiftButtons.closest(lngClass);
+
+        this._traverseInputButtons($parent, false, "normal");
+
+        Core.shift = false;
+        $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
+    },
+
+    // Provides layout/language localized click event of a provided button.
+    _onLocalButtonClick: function (button, handler) {
+        Visualization.$base
+            .find(Helpers.getSelectedLangClass())
+            .find(button)
+            .click(handler);
+    },
+
+    // Traverses through all of the letter/normal buttons.
+    _traverseLetterButtons: function ($parent, shouldBeUpper) {
+        $parent.find("." + NORM_BTN_CLASS).each(function() {
+            var $this = $(this),
+                value = $this.data("val");
+
+            if (shouldBeUpper) {
+                value = value.toUpperCase();
+            } else {
+                value = value.toLowerCase();
+            }
+
+            $this.html(value).data("val", value);
         });
     },
 
-    resetActiveElementFocus: function() {
-        this.$activeElement.blur(function () {
-            setTimeout(function () {
-                EventManager.$activeElement.focus(function(event) {
-                    event.stopPropagation();
-                });
-            }, 25);
+    // Traverses through all input buttons.
+    _traverseInputButtons: function ($parent, shouldBeUpper, shiftBtnValueSource) {
+        // Normal
+        this._traverseLetterButtons($parent, shouldBeUpper);
+
+        // Shift-active
+        $parent.find("." + SHFT_BTN_CLASS).each(function() {
+            var $this = $(this),
+
+            /* Select the source of the wanted button state
+             * Can be 'normal' or in 'shift' mode */
+                value = $this.data(shiftBtnValueSource);
+
+            $this.html(value).data("val", value);
         });
     },
 

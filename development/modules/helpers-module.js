@@ -18,6 +18,11 @@ Helpers = { //jshint ignore:line
         return string.slice(0, selection.start - caretOffset) + string.slice(selection.end);
     },
 
+    // Returns the currently selected language class.
+    getSelectedLangClass: function () {
+        return "." + Core.selectedLanguage + LNG_CLASS_POSTFIX;
+    },
+
     /*
      * Credits goes to kd7
      * Source: http://stackoverflow.com/questions/512528/set-cursor-position-in-html-textbox

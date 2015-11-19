@@ -14,6 +14,7 @@ Visualization = { //jshint ignore:line
         this.$base = $("<div>").attr("id", BASE_ID);
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
         this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
+
         this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
 
@@ -96,13 +97,17 @@ Visualization = { //jshint ignore:line
         return $layoutCont;
     },
 
-    // Returns <button> from given command string.
+    // Returns <button> from a given command string.
     buildButtonFromString: function(button) {
         var $button = $("<button>").addClass(BUTTON_CLASS);
 
+        // Normal/regular
         if (button.length === 1) {
-            $button.addClass(NORM_BTN_CLASS).data("val", button).html(button);
+            $button.addClass(NORM_BTN_CLASS)
+                .data("val", button) // Container for the value.
+                .html(button);
         }
+        // Shift-active
         else if (button.length === 3) {
             $button.addClass(SHFT_BTN_CLASS)
                 .data("val", button[0]) // Container for the current value. 'Normal' by default.
@@ -110,6 +115,7 @@ Visualization = { //jshint ignore:line
                 .data("normal", button[0]) // Defines the normal value
                 .html(button[0]);
         }
+        // Special
         else if (button.indexOf("<<") !== -1 && button.indexOf(">>") !== -1) {
             $button = this.createSpecialBtn($button, button);
         }
@@ -136,6 +142,7 @@ Visualization = { //jshint ignore:line
         }
 
         $button.addClass(SPEC_BTN_CLASS + " " + buttonStr).html("&nbsp;");
+        // NB space is needed for visual purposes .............. ^^^^^^
 
         return $button;
     },
