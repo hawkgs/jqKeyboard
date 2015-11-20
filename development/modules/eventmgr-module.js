@@ -12,6 +12,12 @@ EventManager = { //jshint ignore:line
     SHIFT_CLASS: "." + SPEC_BTN_CLASS + ".shift",
     CPSLCK_CLASS: "." + SPEC_BTN_CLASS + ".capslock",
 
+    // Module-specific variables
+
+    /* Keeps track if language/layout specific events are already loaded.
+     * Language-specific events: CapsLock and Shift */
+    areLangEventsLoaded: {},
+
     // Language/layout switching functionality.
     loadLanguageSwitcher: function() {
         $("." + LANG_BTN_CLASS).click(function() {
@@ -27,6 +33,7 @@ EventManager = { //jshint ignore:line
                 return;
             }
 
+            // Visually update the language bar
             $(currentLngClass).addClass(HIDE_CLASS);
             $(newLangClass).removeClass(HIDE_CLASS);
             $("." + LANG_BTN_CLASS + "." + SELECTED_ITEM_CLASS).removeClass(SELECTED_ITEM_CLASS);
@@ -34,9 +41,13 @@ EventManager = { //jshint ignore:line
 
             Core.selectedLanguage = newLang;
 
-            // Reassign CapsLock and Shift buttons to their corresponding layout/language
-            EventManager.loadCapsLockEvent();
-            EventManager.loadShiftEvent();
+            // Assign CapsLock and Shift events to their corresponding layout/language
+            if (!EventManager.areLangEventsLoaded[Core.selectedLanguage]) {
+                EventManager.loadCapsLockEvent();
+                EventManager.loadShiftEvent();
+
+                EventManager.areLangEventsLoaded[Core.selectedLanguage] = true;
+            }
         });
     },
 
@@ -49,23 +60,23 @@ EventManager = { //jshint ignore:line
 
             EventManager._resetCaretOfActiveElem();
 
-            if (Core.shift) {
+            if (Core.shift[Core.selectedLanguage]) {
                 return;
             }
 
             $this = $(this);
             $parent = $this.closest(lngClass); // Modify only selected layout
 
-            if (Core.capsLock) {
+            if (Core.capsLock[Core.selectedLanguage]) {
                 $this.removeClass(SELECTED_ITEM_CLASS);
-                Core.capsLock = false;
+                Core.capsLock[Core.selectedLanguage] = false;
             } else {
                 $this.addClass(SELECTED_ITEM_CLASS);
-                Core.capsLock = true;
+                Core.capsLock[Core.selectedLanguage] = true;
             }
 
             // Set all buttons to upper or lower case
-            EventManager._traverseLetterButtons($parent, Core.capsLock);
+            EventManager._traverseLetterButtons($parent, Core.capsLock[Core.selectedLanguage]);
         });
     },
 
@@ -74,28 +85,30 @@ EventManager = { //jshint ignore:line
         var lngClass = Helpers.getSelectedLangClass();
 
         this._onLocalButtonClick(EventManager.SHIFT_CLASS, function () {
-            var $shiftButtons = $(Helpers.getSelectedLangClass()).find(EventManager.SHIFT_CLASS),
+            var $lngClass = $(lngClass),
+                $shiftButtons = $lngClass.find(EventManager.SHIFT_CLASS),
+                $capsLock = $lngClass.find(EventManager.CPSLCK_CLASS),
                 $parent;
 
             EventManager._resetCaretOfActiveElem();
 
-            if (Core.shift) {
+            if (Core.shift[Core.selectedLanguage]) {
                 EventManager._unshift();
                 return;
             }
 
-            if (Core.capsLock) {
-                $(EventManager.CPSLCK_CLASS).removeClass(SELECTED_ITEM_CLASS);
-                Core.capsLock = false;
+            if (Core.capsLock[Core.selectedLanguage]) {
+                $capsLock.removeClass(SELECTED_ITEM_CLASS);
+                Core.capsLock[Core.selectedLanguage] = false;
             }
 
             $parent = $(this).closest(lngClass);
 
             EventManager._traverseInputButtons($parent, true, "shift");
 
-            Core.shift = true;
+            Core.shift[Core.selectedLanguage] = true;
             // Not using $(this) since we have to change all shift buttons
-            $shiftButtons.addClass(SELECTED_ITEM_CLASS); //todo
+            $shiftButtons.addClass(SELECTED_ITEM_CLASS);
         });
     },
 
@@ -139,7 +152,7 @@ EventManager = { //jshint ignore:line
                     };
                 });
 
-                if (Core.shift) {
+                if (Core.shift[Core.selectedLanguage]) {
                     EventManager._unshift();
                 }
             });
@@ -162,18 +175,8 @@ EventManager = { //jshint ignore:line
         });
     },
 
-    // todo
-    // Reassigns the current active element whenever the user clicks somewhere else (eg. keyboard buttons)
-    /*reassignActiveElementFocus: function() {
-        this.$activeElement.blur(function () {
-            setTimeout(function () {
-                EventManager.$activeElement.focus(function(event) {
-                    event.stopPropagation();
-                });
-            }, 25);
-        });
-    },*/
-
+    /* Modifies the current active element content according the requested operation.
+     * Used on text manipulation - entering or deleting content (text). */
     _onActiveElemTextManipulation: function(btnFunctionality) {
         var activeElemNative,
             currentContent,
@@ -181,9 +184,6 @@ EventManager = { //jshint ignore:line
             selection;
 
         if (EventManager.$activeElement) {
-            // Needs to be reassigned since you are clicking on a KB button.
-            //EventManager.reassignActiveElementFocus(); todo
-
             currentContent = EventManager.$activeElement.val() || "";
             activeElemNative = EventManager.$activeElement[0];
 
@@ -211,12 +211,12 @@ EventManager = { //jshint ignore:line
     // Returns all the buttons in their normal state (Opposite of .loadShiftEvent())
     _unshift: function() {
         var lngClass = Helpers.getSelectedLangClass(),
-            $shiftButtons = $(Helpers.getSelectedLangClass()).find(EventManager.SHIFT_CLASS), //todo
+            $shiftButtons = $(Helpers.getSelectedLangClass()).find(EventManager.SHIFT_CLASS),
             $parent = $shiftButtons.closest(lngClass);
 
         this._traverseInputButtons($parent, false, "normal");
-
-        Core.shift = false;
+        
+        Core.shift[Core.selectedLanguage] = false;
         $shiftButtons.removeClass(SELECTED_ITEM_CLASS);
     },
 
@@ -253,8 +253,8 @@ EventManager = { //jshint ignore:line
         $parent.find("." + SHFT_BTN_CLASS).each(function() {
             var $this = $(this),
 
-            /* Select the source of the wanted button state
-             * Can be 'normal' or in 'shift' mode */
+                /* Select the source of the wanted button state
+                 * Can be 'normal' or in 'shift' mode */
                 value = $this.data(shiftBtnValueSource);
 
             $this.html(value).data("val", value);
@@ -268,7 +268,10 @@ EventManager = { //jshint ignore:line
         this.loadLanguageSwitcher();
         this.loadInputButtonEvent();
         this.loadBackspaceEvent();
-        this.loadCapsLockEvent();
-        this.loadShiftEvent();
+        this.loadCapsLockEvent(); // ev1
+        this.loadShiftEvent(); // ev2
+
+        // 'ev1' and 'ev2' are loaded for default language/layout
+        this.areLangEventsLoaded[Core.selectedLanguage] = true;
     }
 };

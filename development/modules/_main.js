@@ -2,15 +2,13 @@ var jqKeyboard = (function($) {
     "use strict";
 
         // CONSTANTS
-    var CUST_CONT_START_OFFSET = 10,
-        DEF_ALLOWED_ELEMENTS = "input, textarea",
+    var DEF_ALLOWED_ELEMENTS = "input, textarea",
         NORM_BTN_CLASS = "normal",
         SHFT_BTN_CLASS = "shift-b",
         SPEC_BTN_CLASS = "special",
         BUTTON_CLASS = "jqk-btn",
         LANG_BTN_CLASS = "jqk-lang-btn",
         SELECTED_ITEM_CLASS = "selected",
-        DEF_POS_CLASS = "def-pos",
         CLICKED_CLASS ="clicked",
         MIN_BTN_CLASS = "minimize-btn",
         BTN_ROW_CLASS = "btn-row",

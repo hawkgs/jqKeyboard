@@ -29,8 +29,8 @@ Core = { //jshint ignore:line
         Core.options = options;
         Core.isRunning = true;
         Core.selectedLanguage = null;
-        Core.shift = false;
-        Core.capsLock = false;
+        Core.shift = {};
+        Core.capsLock = {};
 
         // Load modules
         Visualization.$$createBase();

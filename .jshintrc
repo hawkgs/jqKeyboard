@@ -93,7 +93,6 @@
     "jqKeyboard",
 
     // Constants
-    "CUST_CONT_START_OFFSET",
     "DEF_ALLOWED_ELEMENTS",
     "NORM_BTN_CLASS",
     "SHFT_BTN_CLASS",
@@ -101,7 +100,6 @@
     "BUTTON_CLASS",
     "LANG_BTN_CLASS",
     "SELECTED_ITEM_CLASS",
-    "DEF_POS_CLASS",
     "CLICKED_CLASS",
     "MIN_BTN_CLASS",
     "BTN_ROW_CLASS",
