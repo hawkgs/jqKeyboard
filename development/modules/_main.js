@@ -2,7 +2,7 @@ var jqKeyboard = (function($) {
     "use strict";
 
         // CONSTANTS
-    var DEF_ALLOWED_ELEMENTS = "input, textarea",
+    var DEF_ALLOWED_ELEMENTS = 'input[type="text"], textarea, input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="password"], input[type="search"], input[type="month"], input[type="url"], input[type="time"], input[type="tel"], input[type="week"], input[type="number"]',
         NORM_BTN_CLASS = "normal",
         SHFT_BTN_CLASS = "shift-b",
         SPEC_BTN_CLASS = "special",

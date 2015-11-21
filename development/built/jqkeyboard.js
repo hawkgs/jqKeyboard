@@ -3,14 +3,14 @@
  * @version v0.1.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 108
+ * @build 110
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
     "use strict";
 
         // CONSTANTS
-    var DEF_ALLOWED_ELEMENTS = "input, textarea",
+    var DEF_ALLOWED_ELEMENTS = 'input[type="text"], textarea, input[type="date"], input[type="datetime"], input[type="datetime-local"], input[type="email"], input[type="password"], input[type="search"], input[type="month"], input[type="url"], input[type="time"], input[type="tel"], input[type="week"], input[type="number"]',
         NORM_BTN_CLASS = "normal",
         SHFT_BTN_CLASS = "shift-b",
         SPEC_BTN_CLASS = "special",
@@ -505,8 +505,8 @@ EventManager = {
         $parent.find("." + SHFT_BTN_CLASS).each(function() {
             var $this = $(this),
 
-            /* Select the source of the wanted button state
-             * Can be 'normal' or in 'shift' mode */
+                /* Select the source of the wanted button state
+                 * Can be 'normal' or in 'shift' mode */
                 value = $this.data(shiftBtnValueSource);
 
             $this.html(value).data("val", value);
