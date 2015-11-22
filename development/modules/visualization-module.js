@@ -8,15 +8,18 @@ Visualization = { //jshint ignore:line
     // ENTRY POINT
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
     $$createBase: function() {
-        var contDefaultX,
+        var $body = $("body"),
+            contDefaultX,
             contDefaultY;
 
         this.$base = $("<div>").attr("id", BASE_ID);
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
         this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
+        this.$toggleBtn = $("<div>").attr("id", TOGGLE_JQK_ID);
 
         this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
+        $body.append(this.$toggleBtn);
 
         // Creates all defined layouts
         this.createLayout();
@@ -25,7 +28,7 @@ Visualization = { //jshint ignore:line
             this.containment = $(Core.options.containment);
             this.containment.append(this.$base);
         } else {
-            $("body").append(this.$base);
+            $body.append(this.$base);
 
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();

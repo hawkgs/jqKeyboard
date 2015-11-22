@@ -1,9 +1,9 @@
 /**
  * jqKeyboard - jQuery-based virtual keyboard
- * @version v0.1.0
+ * @version v1.0.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 110
+ * @build 119
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -19,6 +19,7 @@ var jqKeyboard = (function($) {
         SELECTED_ITEM_CLASS = "selected",
         CLICKED_CLASS ="clicked",
         MIN_BTN_CLASS = "minimize-btn",
+        TOGGLE_JQK_ID = "jqk-toggle-btn",
         BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",
@@ -94,15 +95,18 @@ Visualization = {
     // ENTRY POINT
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
     $$createBase: function() {
-        var contDefaultX,
+        var $body = $("body"),
+            contDefaultX,
             contDefaultY;
 
         this.$base = $("<div>").attr("id", BASE_ID);
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
         this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
+        this.$toggleBtn = $("<div>").attr("id", TOGGLE_JQK_ID);
 
         this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
+        $body.append(this.$toggleBtn);
 
         // Creates all defined layouts
         this.createLayout();
@@ -111,7 +115,7 @@ Visualization = {
             this.containment = $(Core.options.containment);
             this.containment.append(this.$base);
         } else {
-            $("body").append(this.$base);
+            $body.append(this.$base);
 
             contDefaultX = $(window).outerWidth() - this.$base.outerWidth();
             contDefaultY = $(window).outerHeight() - this.$base.outerHeight();
@@ -572,8 +576,18 @@ UIController = {
     // Minimization feature
     minimizeKeyboard: function () {
         Visualization.$minBtn.click(function () {
-            // todo
-            console.log("todo");
+            Visualization.$base.slideUp();
+
+            Visualization.$toggleBtn.fadeIn();
+        });
+    },
+
+    // Maximization feature
+    maximizeKeyboard: function () {
+        Visualization.$toggleBtn.click(function () {
+            Visualization.$base.slideDown();
+
+            $(this).hide();
         });
     },
 
@@ -582,6 +596,7 @@ UIController = {
         this.attachDragToBase();
         this.attachOnClickBtnEvent();
         this.minimizeKeyboard();
+        this.maximizeKeyboard();
     }
 };
 

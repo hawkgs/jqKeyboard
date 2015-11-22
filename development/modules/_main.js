@@ -11,6 +11,7 @@ var jqKeyboard = (function($) {
         SELECTED_ITEM_CLASS = "selected",
         CLICKED_CLASS ="clicked",
         MIN_BTN_CLASS = "minimize-btn",
+        TOGGLE_JQK_ID = "jqk-toggle-btn",
         BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
         BASE_ID = "jq-keyboard",

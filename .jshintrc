@@ -102,6 +102,7 @@
     "SELECTED_ITEM_CLASS",
     "CLICKED_CLASS",
     "MIN_BTN_CLASS",
+    "TOGGLE_JQK_ID",
     "BTN_ROW_CLASS",
     "HIDE_CLASS",
     "BASE_ID",

@@ -41,8 +41,18 @@ UIController = { //jshint ignore:line
     // Minimization feature
     minimizeKeyboard: function () {
         Visualization.$minBtn.click(function () {
-            // todo
-            console.log("todo");
+            Visualization.$base.slideUp();
+
+            Visualization.$toggleBtn.fadeIn();
+        });
+    },
+
+    // Maximization feature
+    maximizeKeyboard: function () {
+        Visualization.$toggleBtn.click(function () {
+            Visualization.$base.slideDown();
+
+            $(this).hide();
         });
     },
 
@@ -51,5 +61,6 @@ UIController = { //jshint ignore:line
         this.attachDragToBase();
         this.attachOnClickBtnEvent();
         this.minimizeKeyboard();
+        this.maximizeKeyboard();
     }
 };
