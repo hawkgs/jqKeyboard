@@ -17,6 +17,10 @@ Visualization = { //jshint ignore:line
         this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
         this.$toggleBtn = $("<div>").attr("id", TOGGLE_JQK_ID);
 
+        if (Core.options && Core.options.icon === "dark") {
+            this.$toggleBtn.addClass(DARK_ICN_CLASS);
+        }
+
         this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
         $body.append(this.$toggleBtn);

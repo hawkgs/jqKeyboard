@@ -14,6 +14,7 @@ var jqKeyboard = (function($) {
         TOGGLE_JQK_ID = "jqk-toggle-btn",
         BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
+        DARK_ICN_CLASS = "dark",
         BASE_ID = "jq-keyboard",
         LANG_CONT_ID = "jqk-lang-cont",
         LNG_CLASS_POSTFIX = "-lang",

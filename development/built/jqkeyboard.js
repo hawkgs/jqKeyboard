@@ -3,7 +3,7 @@
  * @version v1.0.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 119
+ * @build 122
  */
 /* globals -jqKeyboard */
 var jqKeyboard = (function($) {
@@ -22,6 +22,7 @@ var jqKeyboard = (function($) {
         TOGGLE_JQK_ID = "jqk-toggle-btn",
         BTN_ROW_CLASS = "btn-row",
         HIDE_CLASS = "jqk-hide",
+        DARK_ICN_CLASS = "dark",
         BASE_ID = "jq-keyboard",
         LANG_CONT_ID = "jqk-lang-cont",
         LNG_CLASS_POSTFIX = "-lang",
@@ -103,6 +104,10 @@ Visualization = {
         this.$langCont = $("<div>").attr("id", LANG_CONT_ID);
         this.$minBtn = $("<div>").addClass(MIN_BTN_CLASS).prop("title", "Minimize");
         this.$toggleBtn = $("<div>").attr("id", TOGGLE_JQK_ID);
+
+        if (Core.options && Core.options.icon === "dark") {
+            this.$toggleBtn.addClass(DARK_ICN_CLASS);
+        }
 
         this.$langCont.append(this.$minBtn);
         this.$base.append(this.$langCont);
