@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>jqKeyboard Demo</title>
+        <link rel="stylesheet" href="../development/css/jqkeyboard.css" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+        <script src="libs/jquery-ui/jquery-ui.min.js"></script>
+        <script src="https://raw.githubusercontent.com/hAWKdv/jqKeyboard/master/development/built/jqkeyboard.js"></script>
+        <script src="https://raw.githubusercontent.com/hAWKdv/jqKeyboard/master/layouts/jqk.layout.en-bg.js"></script>
+        <style type="text/css">
+            #button-hint {
+                position: fixed;
+                background: #090;
+                width: 100%; height: 100%;
+                top: 0; left: 0;
+                opacity: 0.5;
+            }
+
+            #balloon {
+                position: fixed;
+                background: #FFF;
+                width: 200px; height: 200px;
+                bottom: -30px; right: -20px;
+                border-radius: 100px;
+                transition: 0.7s ease;
+            }
+
+            #balloon.shrink {
+                width: 100px; height: 100px;
+            }
+
+            input, textarea {
+                background: #EEE;
+                font-size: 16px;
+                padding: 10px;
+                border: none;
+                margin-bottom: 15px;
+            }
+
+            #fields {
+                position: relative;
+                width: 500px;
+                text-align: center;
+                margin: 0 auto;
+                margin-top: 100px;
+            }
+
+            a {
+                font-family: Arial, Helvetica, sans-serif;
+                color: #007fff;
+                text-decoration: none;
+            }
+
+            a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <section id="fields">
+            <input type="text" placeholder="Type something" size="30" /><br/>
+            <textarea rows="5" cols="30" placeholder=""></textarea><br/>
+            <a href="https://github.com/hAWKdv/jqKeyboard">Back to repo</a>
+        </section>
+        <div id="button-hint"></div>
+        <div id="balloon"></div>
+        <script type="text/javascript">
+            $(function () {
+                "use strict";
+
+                var $balloon = $("#balloon");
+
+                setTimeout(function () {
+                    $balloon.addClass("shrink");
+                }, 500);
+
+                $(this).click(function () {
+                    $("#button-hint").fadeOut();
+                    $balloon.fadeOut();
+                });
+
+                jqKeyboard.init();
+            });
+        </script>
+    </body>
+</html>
