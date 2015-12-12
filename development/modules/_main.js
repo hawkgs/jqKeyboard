@@ -1,4 +1,6 @@
-var jqKeyboard = (function($) {
+var jqKeyboard = jqKeyboard || {};
+
+(function(jqKeyboard, $) {
     "use strict";
 
         // CONSTANTS
@@ -30,7 +32,5 @@ var jqKeyboard = (function($) {
 
 //<%= contents %>
 
-    return {
-        init: Core.init
-    };
-}(jQuery));
+    jqKeyboard.init = Core.init;
+}(jqKeyboard, jQuery));

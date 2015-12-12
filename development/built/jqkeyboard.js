@@ -3,10 +3,12 @@
  * @version v1.0.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 122
+ * @build 123
  */
 /* globals -jqKeyboard */
-var jqKeyboard = (function($) {
+var jqKeyboard = jqKeyboard || {};
+
+(function(jqKeyboard, $) {
     "use strict";
 
         // CONSTANTS
@@ -647,7 +649,5 @@ Core = {
 };
 
 
-    return {
-        init: Core.init
-    };
-}(jQuery));
+    jqKeyboard.init = Core.init;
+}(jqKeyboard, jQuery));
