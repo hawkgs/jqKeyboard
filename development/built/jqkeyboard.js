@@ -3,7 +3,7 @@
  * @version v1.0.0
  * @link https://github.com/hAWKdv/jqKeyboard#readme
  * @license MIT
- * @build 123
+ * @build 126
  */
 /* globals -jqKeyboard */
 var jqKeyboard = jqKeyboard || {};
@@ -283,7 +283,7 @@ EventManager = {
 
     // Language/layout switching functionality.
     loadLanguageSwitcher: function() {
-        $("." + LANG_BTN_CLASS).click(function() {
+        $("." + LANG_BTN_CLASS).on("click", function() {
             var $this = $(this),
                 newLang = $this.data("lang"),
                 newLangClass = "." + newLang + LNG_CLASS_POSTFIX,
@@ -377,7 +377,7 @@ EventManager = {
 
     // BACKSPACE functionality.
     loadBackspaceEvent: function() {
-        $("." + SPEC_BTN_CLASS + ".backspace").click(function() {
+        $("." + SPEC_BTN_CLASS + ".backspace").on("click", function() {
             EventManager._onActiveElemTextManipulation(
                 function(selection, currentContent) {
                     var backspaceCaretOffset;
@@ -405,7 +405,7 @@ EventManager = {
             .add("." + SPEC_BTN_CLASS + ".space")
             .add("." + SPEC_BTN_CLASS + ".tab")
             .add("." + SPEC_BTN_CLASS + ".enter")
-            .click(function() {
+            .on("click", function() {
                 var selectedBtnVal = $(this).data("val");
 
                 EventManager._onActiveElemTextManipulation(function(selection, currentContent) {
@@ -488,7 +488,7 @@ EventManager = {
         Visualization.$base
             .find(Helpers.getSelectedLangClass())
             .find(button)
-            .click(handler);
+            .on("click", handler);
     },
 
     // Traverses through all of the letter/normal buttons.
@@ -564,7 +564,7 @@ UIController = {
 
     // Used for visual representation of button clicking.
     attachOnClickBtnEvent: function () {
-        $("." + BUTTON_CLASS).mousedown(function () {
+        $("." + BUTTON_CLASS).on("mousedown", function () {
                 var $this = $(this);
 
                 $this.addClass(CLICKED_CLASS);
@@ -575,15 +575,16 @@ UIController = {
                     $this.removeClass(CLICKED_CLASS);
                 }, 500);
             })
-            .mouseup(function () {
+            .on("mouseup", function () {
                 $(this).removeClass(CLICKED_CLASS);
             });
     },
 
     // Minimization feature
     minimizeKeyboard: function () {
-        Visualization.$minBtn.click(function () {
-            Visualization.$base.slideUp();
+        Visualization.$minBtn.on("click", function () {
+            //Visualization.$base.slideUp();
+            Visualization.$base.removeClass("show");
 
             Visualization.$toggleBtn.fadeIn();
         });
@@ -591,8 +592,9 @@ UIController = {
 
     // Maximization feature
     maximizeKeyboard: function () {
-        Visualization.$toggleBtn.click(function () {
-            Visualization.$base.slideDown();
+        Visualization.$toggleBtn.on("click", function () {
+            //Visualization.$base.slideDown();
+            Visualization.$base.addClass("show");
 
             $(this).hide();
         });
@@ -649,5 +651,6 @@ Core = {
 };
 
 
+    // exports
     jqKeyboard.init = Core.init;
 }(jqKeyboard, jQuery));

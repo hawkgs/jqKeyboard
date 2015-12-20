@@ -22,7 +22,7 @@ UIController = { //jshint ignore:line
 
     // Used for visual representation of button clicking.
     attachOnClickBtnEvent: function () {
-        $("." + BUTTON_CLASS).mousedown(function () {
+        $("." + BUTTON_CLASS).on("mousedown", function () {
                 var $this = $(this);
 
                 $this.addClass(CLICKED_CLASS);
@@ -33,15 +33,16 @@ UIController = { //jshint ignore:line
                     $this.removeClass(CLICKED_CLASS);
                 }, 500);
             })
-            .mouseup(function () {
+            .on("mouseup", function () {
                 $(this).removeClass(CLICKED_CLASS);
             });
     },
 
     // Minimization feature
     minimizeKeyboard: function () {
-        Visualization.$minBtn.click(function () {
-            Visualization.$base.slideUp();
+        Visualization.$minBtn.on("click", function () {
+            //Visualization.$base.slideUp();
+            Visualization.$base.removeClass("show");
 
             Visualization.$toggleBtn.fadeIn();
         });
@@ -49,8 +50,9 @@ UIController = { //jshint ignore:line
 
     // Maximization feature
     maximizeKeyboard: function () {
-        Visualization.$toggleBtn.click(function () {
-            Visualization.$base.slideDown();
+        Visualization.$toggleBtn.on("click", function () {
+            //Visualization.$base.slideDown();
+            Visualization.$base.addClass("show");
 
             $(this).hide();
         });

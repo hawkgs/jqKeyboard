@@ -20,7 +20,7 @@ EventManager = { //jshint ignore:line
 
     // Language/layout switching functionality.
     loadLanguageSwitcher: function() {
-        $("." + LANG_BTN_CLASS).click(function() {
+        $("." + LANG_BTN_CLASS).on("click", function() {
             var $this = $(this),
                 newLang = $this.data("lang"),
                 newLangClass = "." + newLang + LNG_CLASS_POSTFIX,
@@ -114,7 +114,7 @@ EventManager = { //jshint ignore:line
 
     // BACKSPACE functionality.
     loadBackspaceEvent: function() {
-        $("." + SPEC_BTN_CLASS + ".backspace").click(function() {
+        $("." + SPEC_BTN_CLASS + ".backspace").on("click", function() {
             EventManager._onActiveElemTextManipulation(
                 function(selection, currentContent) {
                     var backspaceCaretOffset;
@@ -142,7 +142,7 @@ EventManager = { //jshint ignore:line
             .add("." + SPEC_BTN_CLASS + ".space")
             .add("." + SPEC_BTN_CLASS + ".tab")
             .add("." + SPEC_BTN_CLASS + ".enter")
-            .click(function() {
+            .on("click", function() {
                 var selectedBtnVal = $(this).data("val");
 
                 EventManager._onActiveElemTextManipulation(function(selection, currentContent) {
@@ -225,7 +225,7 @@ EventManager = { //jshint ignore:line
         Visualization.$base
             .find(Helpers.getSelectedLangClass())
             .find(button)
-            .click(handler);
+            .on("click", handler);
     },
 
     // Traverses through all of the letter/normal buttons.

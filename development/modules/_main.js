@@ -32,5 +32,6 @@ var jqKeyboard = jqKeyboard || {};
 
 //<%= contents %>
 
+    // exports
     jqKeyboard.init = Core.init;
 }(jqKeyboard, jQuery));
