@@ -1,6 +1,6 @@
-![](https://raw.githubusercontent.com/hAWKdv/jqKeyboard/master/misc/logo.png)
+![jqKeyboard](https://raw.githubusercontent.com/hAWKdv/jqKeyboard/master/misc/logo.png)
 
-* * *
+====
 
 jQuery-based virtual keyboard.
 
@@ -19,14 +19,18 @@ In order to implement jqKeyboard in your project you have to:
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 ```
+
 **2\. Pick a theme from** `themes` **folder and load it.**
 ```
 <link rel="stylesheet" href=".../css/jqkeyboard.css" />
 ```
+
 **3\. Include jqKeyboard library:**
 ```
 <script src=".../scripts/jqkeyboard.min.js"></script>
-```**4\. Go to** `layouts` **folder and pick your desired one (If you want to create your own, check _Custom Layouts_ below):**
+```
+
+**4\. Go to** `layouts` **folder and pick your desired one (If you want to create your own, check _Custom Layouts_ below):**
 ```
 <scripts src=".../scripts/jqk.layout.en.js"></script>
 ```Note that the loading order of the library and layout doesn't matter.
@@ -39,7 +43,9 @@ $(function () {
 
     jqKeyboard.init();
 });
-```The API of the library provides few options which can be passed to `.init()` function as an object.
+```
+
+The API of the library provides few options which can be passed to `.init()` function as an object.
 
 *   `containment` - _DOM element (string)_ - By default, the containment is set to `body` (i.e. whole page). You can specify your own containment by providing a DOM element. That way your keyboard could be dragged only in that element.
 *   `allowed` - _Array of DOM input elements (strings_) - This option allows only listed elements to be jqKeyboard-active meaning that you won't be able to use the keyboard for the rest of the input elements. By default, jqKeyboard will work for all input elements on the page.
@@ -56,7 +62,8 @@ $(function () {
         icon: "dark"
     });
 });
-```That's it!
+```
+That's it!
 
 ## Custom Layouts
 
@@ -66,12 +73,15 @@ var jqKeyboard = jqKeyboard || {}; // trying not to override the jqKeyboard obje
 
 jqKeyboard.layouts = [/* In this array we will put all layout objects */];
 ```
-**Layout Objects**After we are ready with the initial script file, we can proceed with filling the layouts array with our objects. Each layout object has two properties - `lang`, which must be unique and identifies the language (we suggest you keeping it short, eg. EN for English) and `layout`, which represents the layout itself.
+**Layout Objects**
+
+After we are ready with the initial script file, we can proceed with filling the layouts array with our objects. Each layout object has two properties - `lang`, which must be unique and identifies the language (we suggest you keeping it short, eg. EN for English) and `layout`, which represents the layout itself.
 
 `layout` **Property**
+
 As you probably already noted, the `layout` is an array of strings where each string represents a line, a new row of the keyboard. Each letter is separated by space. Special keys are wrapped in `<<KEY_NAME>>`. Currently, these are available ones:
-_
-<<capslock>>, <<shift>>, <<tab>>, <<enter>>, <<space>>, <<backspace>>_
+
+_\<\<capslock\>\>, \<\<shift\>\>, \<\<tab\>\>, \<\<enter\>\>, \<\<space\>\>, \<\<backspace\>\>_
 
 **Shift and Caps Lock**
 
