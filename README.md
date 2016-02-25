@@ -15,29 +15,32 @@ jQuery-based virtual keyboard.
 In order to implement jqKeyboard in your project you have to:
 
 **1\. Include jQuery and jQuery UI libraries to your code:**
-```
+```html
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 ```
 
 **2\. Pick a theme from** `themes` **folder and load it.**
-```
+```html
 <link rel="stylesheet" href=".../css/jqkeyboard.css" />
 ```
 
 **3\. Include jqKeyboard library:**
-```
+```html
 <script src=".../scripts/jqkeyboard.min.js"></script>
 ```
 
 **4\. Go to** `layouts` **folder and pick your desired one (If you want to create your own, check _Custom Layouts_ below):**
-```
+```html
 <scripts src=".../scripts/jqk.layout.en.js"></script>
-```Note that the loading order of the library and layout doesn't matter.
+```
+
+Note that the loading order of the library and layout doesn't matter.
 
 **5\. Configure and run:**
+
 In order to run the keyboard you have to call the `.init()` function which is part of the `jqKeyboard` object after the page loaded:
-```
+```javascript
 $(function () {
     "use strict";
 
@@ -52,7 +55,7 @@ The API of the library provides few options which can be passed to `.init()` fun
 *   `icon` - _"dark" or "light" (string)_ - Depending on your prevailing page design color (being darker or lighter), you could use this option in order to change the color of the icon in order to achieve better contrast. The default value is "light".
 
 Here is a sample code with the options:
-```
+```javascript
 $(function () {
     "use strict";
 
@@ -68,11 +71,12 @@ That's it!
 ## Custom Layouts
 
 If you can't find your needed language layout from the existing ones (which is very likely to be so), you can create your own one. Okay, let's start with the initial layout script file:
-```
+```javascript
 var jqKeyboard = jqKeyboard || {}; // trying not to override the jqKeyboard object.
 
 jqKeyboard.layouts = [/* In this array we will put all layout objects */];
 ```
+
 **Layout Objects**
 
 After we are ready with the initial script file, we can proceed with filling the layouts array with our objects. Each layout object has two properties - `lang`, which must be unique and identifies the language (we suggest you keeping it short, eg. EN for English) and `layout`, which represents the layout itself.
@@ -90,6 +94,7 @@ If the letter you entered supports lower/upper case, it will get automatically c
 ```
 <<shift>> a b c d +|-
 ```
+
 In its normal state, the keyboard will render "a b c d +" (so in this case the left side of the sign combination). Whenever we press Shift, the keyboard will change to "A B C D -" (letters gets automatically uppercase where the sign changes to minus - right side). Summarized: Normal state - plus sign; Shift is active: minus sign.
 
 **Non-ASCII Characters**
