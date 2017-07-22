@@ -1,43 +1,32 @@
-![jqKeyboard](https://raw.githubusercontent.com/hAWKdv/jqKeyboard/master/misc/logo.png)
+![jqKeyboard](./misc/logo.png)
 
-====
+---
 
 jQuery-based virtual keyboard.
 
-**V1.0.0 Beta**
+**v1.0.0 Beta**
 
 ## Demo
 
-[Try it](http://htmlpreview.github.io/?https://raw.githubusercontent.com/hAWKdv/jqKeyboard/master/demos/main.html)
+[Try it](http://htmlpreview.github.io/?https://raw.githubusercontent.com/hawkgs/jqKeyboard/master/demos/main.html)
 
-## How to use?
+## Installation
 
-In order to implement jqKeyboard in your project you have to:
-
-**1\. Include jQuery and jQuery UI libraries to your code:**
-```html
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+```
+npm install jq-keyboard --save
 ```
 
-**2\. Pick a theme from** `themes` **folder and load it.**
-```html
-<link rel="stylesheet" href=".../css/jqkeyboard.css" />
-```
+Then add the following to your HTML.
 
-**3\. Include jqKeyboard library:**
 ```html
-<script src=".../scripts/jqkeyboard.min.js"></script>
-```
-
-**4\. Go to** `layouts` **folder and pick your desired one (If you want to create your own, check _Custom Layouts_ below):**
-```html
-<scripts src=".../scripts/jqk.layout.en.js"></script>
+<link rel="stylesheet" href="/node_modules/jq-keyboard/jqkeyboard.css" />
+<script src="/node_modules/jq-keyboard/jqkeyboard.min.js"></script>
+<script src="/node_modules/jq-keyboard/jqk.layout.en.js"></script>
 ```
 
 Note that the loading order of the library and layout doesn't matter.
 
-**5\. Configure and run:**
+## Configure and run
 
 In order to run the keyboard you have to call the `.init()` function which is part of the `jqKeyboard` object after the page loaded:
 ```javascript
