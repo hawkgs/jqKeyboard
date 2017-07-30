@@ -1,12 +1,12 @@
 body {
-    background: #333;
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
+  background: #333;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
 }
 
 #test-cont {
-    position: relative;
-    width: 700px;
-    height: 500px;
-    border: 1px solid red;
+  position: relative;
+  width: 700px;
+  height: 500px;
+  border: 1px solid red;
 }

@@ -46,7 +46,7 @@
   "es5"           : true,      // true: Allow ES5 syntax (ex: getters and setters)
   "esnext"        : false,     // true: Allow ES.next (ES6) syntax (ex: `const`)
   "moz"           : false,     // true: Allow Mozilla specific syntax (extends and overrides esnext features)
-  // (ex: `for each`, multiple try/catch, function expression…)
+  // (ex: `for each`, multiple try/catch, function expressionï¿½)
   "evil"          : false,     // true: Tolerate use of `eval` and `new Function()`
   "expr"          : false,     // true: Tolerate `ExpressionStatement` as Programs
   "funcscope"     : false,     // true: Tolerate defining variables inside control statements
@@ -89,34 +89,34 @@
   "yui"           : false,    // Yahoo User Interface
 
   // Custom Globals
-  "globals"       : [
-    "jqKeyboard",
+  "globals"       : {
+    "jqKeyboard": true,
 
     // Constants
-    "DEF_ALLOWED_ELEMENTS",
-    "NORM_BTN_CLASS",
-    "SHFT_BTN_CLASS",
-    "SPEC_BTN_CLASS",
-    "BUTTON_CLASS",
-    "LANG_BTN_CLASS",
-    "SELECTED_ITEM_CLASS",
-    "CLICKED_CLASS",
-    "MIN_BTN_CLASS",
-    "TOGGLE_JQK_ID",
-    "BTN_ROW_CLASS",
-    "HIDE_CLASS",
-    "DARK_ICN_CLASS",
-    "BASE_ID",
-    "LANG_CONT_ID",
-    "LNG_CLASS_POSTFIX",
-    "CONT_START_POINT",
-    "LAYOUTS_LIMIT",
+    "DEF_ALLOWED_ELEMENTS": true,
+    "NORM_BTN_CLASS": true,
+    "SHFT_BTN_CLASS": true,
+    "SPEC_BTN_CLASS": true,
+    "BUTTON_CLASS": true,
+    "LANG_BTN_CLASS": true,
+    "SELECTED_ITEM_CLASS": true,
+    "CLICKED_CLASS": true,
+    "MIN_BTN_CLASS": true,
+    "TOGGLE_JQK_ID": true,
+    "BTN_ROW_CLASS": true,
+    "HIDE_CLASS": true,
+    "DARK_ICN_CLASS": true,
+    "BASE_ID": true,
+    "LANG_CONT_ID": true,
+    "LNG_CLASS_POSTFIX": true,
+    "CONT_START_POINT": true,
+    "LAYOUTS_LIMIT": true,
 
     // Modules
-    "Helpers",
-    "Visualization",
-    "EventManager",
-    "UIController",
-    "Core"
-  ]
+    "Helpers": true,
+    "Visualization": true,
+    "EventManager": true,
+    "UIController": true,
+    "Core": true
+  }
 }

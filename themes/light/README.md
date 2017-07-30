@@ -1,3 +1,3 @@
 ### Preview
 
-![Preview](preview.png)
+![Preview](./preview.png)

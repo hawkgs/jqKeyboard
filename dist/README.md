@@ -4,7 +4,7 @@
 
 jQuery-based virtual keyboard.
 
-**v1.0.0 Beta**
+**v1.0.1**
 
 ## Demo
 
@@ -16,15 +16,18 @@ jQuery-based virtual keyboard.
 npm install jq-keyboard --save
 ```
 
-Then add the following to your HTML.
+Then add below your **jQuery** and **jQuery UI** imports the following HTML:
 
 ```html
+<!-- CSS theme -->
 <link rel="stylesheet" href="/node_modules/jq-keyboard/jqkeyboard.css" />
+<!-- Library -->
 <script src="/node_modules/jq-keyboard/jqkeyboard.min.js"></script>
+<!-- Keyboard layout -->
 <script src="/node_modules/jq-keyboard/jqk.layout.en.js"></script>
 ```
 
-Note that the loading order of the library and layout doesn't matter. Also, more layouts can be found and downloaded manually from `/layouts`.
+Note that the loading order of the library and layout files doesn't matter.
 
 ## Configure and run
 

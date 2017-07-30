@@ -1,6 +1,6 @@
 {
   "name": "jq-keyboard",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "jQuery-based virtual keyboard",
   "main": "index.js",
   "scripts": {
@@ -26,9 +26,6 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/hawkgs/jqKeyboard/issues"
-  },
-  "peerDependencies": {
-    "jquery": "3.x"
   },
   "homepage": "https://github.com/hawkgs/jqKeyboard#readme"
 }
