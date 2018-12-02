@@ -170,7 +170,7 @@
       }
 
       // Set
-      $(allowedElements).focus(function () {
+      $(document).on('focus', allowedElements, function () {
         EventManager.$activeElement = $(this);
       });
     },

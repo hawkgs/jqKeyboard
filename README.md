@@ -4,7 +4,10 @@
 
 jQuery-based virtual keyboard.
 
-**v1.0.1**
+## v1.0.2
+
+**Changelog**:
+- Handle dynamically-created `allowed` elements. (Credits: [avallcanera](https://github.com/avallcanera); [#3](https://github.com/hawkgs/jqKeyboard/issues/3))
 
 ## Demo
 
