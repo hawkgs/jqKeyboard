@@ -1,7 +1,7 @@
 /**
  * jqKeyboard - jQuery-based virtual keyboard
  * @version v1.0.1
- * @link https://github.com/hAWKdv/jqKeyboard#readme
+ * @link https://github.com/hawkgs/jqKeyboard#readme
  * @license MIT
  */
 /* globals -jqKeyboard */
@@ -37,10 +37,11 @@ var jqKeyboard = jqKeyboard || {};
     UIController = {},
     Core = {};
 
+  //'use strict'; var
   /*
    * HELPERS MODULE
    * */
-  Helpers = {
+  Helpers = { 
 
     // Returns the result string after a new character is inserted/added.
     insertCharacter: function (string, selection, char) {
@@ -87,11 +88,12 @@ var jqKeyboard = jqKeyboard || {};
   };
 
 
+'use strict'; var
 	/*
 	 * VISUALIZATION MODULE
 	 * The module purpose is to render all the keyboard layouts - frame, buttons, etc.
 	 * */
-  Visualization = {
+  Visualization = { 
 
     // ENTRY POINT
     // Creates the main frame/base of the keyboard and attaches the drag event to it.
@@ -259,6 +261,7 @@ var jqKeyboard = jqKeyboard || {};
   };
 
 
+'use strict'; var
   /*
    * EVENTMANAGER MODULE
    * Manages all keyboard related events - button functionality, language switching, etc.
@@ -267,7 +270,7 @@ var jqKeyboard = jqKeyboard || {};
    * - $$....() - Entry point / module runner.
    * - _.....() - Functions out of module runner scope (sort of helpers).
    * */
-  EventManager = {
+  EventManager = { 
     // Module-specific constants
     SHIFT_CLASS: '.' + SPEC_BTN_CLASS + '.shift',
     CPSLCK_CLASS: '.' + SPEC_BTN_CLASS + '.capslock',
@@ -430,7 +433,7 @@ var jqKeyboard = jqKeyboard || {};
       }
 
       // Set
-      $(allowedElements).focus(function () {
+      $(document).on('focus', allowedElements, function () {
         EventManager.$activeElement = $(this);
       });
     },
@@ -537,11 +540,12 @@ var jqKeyboard = jqKeyboard || {};
   };
 
 
+'use strict'; var
   /*
    * UI CONTROLLER MODULE
    * Keeps all the ui-related stuff like movement, clicks, dragging.
    * */
-  UIController = {
+  UIController = { 
 
     // Attaches drag event to the keyboard
     attachDragToBase: function () {
@@ -606,11 +610,12 @@ var jqKeyboard = jqKeyboard || {};
   };
 
 
+'use strict'; var
   /*
    * CORE MODULE
    * Entry point of the application
    * */
-  Core = {
+  Core = { 
     isReadyToRun: function () {
       // Checks whether a layout script is loaded.
       if (!jqKeyboard.layouts) {
@@ -649,4 +654,4 @@ var jqKeyboard = jqKeyboard || {};
 
   // exports
   jqKeyboard.init = Core.init;
-}(jqKeyboard, jQuery));
+}(jqKeyboard, jQuery));
