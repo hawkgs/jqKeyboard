@@ -1,6 +1,6 @@
 /**
  * jqKeyboard - jQuery-based virtual keyboard
- * @version v1.0.1
+ * @version v1.0.2
  * @link https://github.com/hawkgs/jqKeyboard#readme
  * @license MIT
  */
