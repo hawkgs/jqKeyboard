@@ -11,7 +11,7 @@ jQuery-based virtual keyboard.
 
 ## Demo
 
-[Try it](http://htmlpreview.github.io/?https://raw.githubusercontent.com/hawkgs/jqKeyboard/master/demos/main.html)
+[Try it](https://hawkgs.github.io/jqKeyboard/)
 
 ## Installation
 
