@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hAWKdv/jqKeyboard.git"
+    "url": "git+https://github.com/hawkgs/jqKeyboard.git"
   },
   "author": "hawkgs",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hAWKdv/jqKeyboard/issues"
+    "url": "https://github.com/hawkgs/jqKeyboard/issues"
   },
-  "homepage": "https://github.com/hAWKdv/jqKeyboard#readme",
+  "homepage": "https://github.com/hawkgs/jqKeyboard#readme",
   "devDependencies": {
     "gulp": "^3.9.1",
     "gulp-clean": "^0.4.0",
